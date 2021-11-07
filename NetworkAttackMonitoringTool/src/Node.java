@@ -9,8 +9,8 @@ public class Node {
     private ArrayList<Node> links;
 
     private boolean infected;
-    //TODO: look for a better data structure to store attacks, need to store date and time along with type of virus
-    private ArrayList<String> attacks;
+    //TODO: look for a better data structure to store attacks(?)
+    private ArrayList<Attack> attacks;
     private int alerts;
 
     public Node(String nName, String nCoordinates, boolean nFirewall) {
@@ -21,25 +21,24 @@ public class Node {
         this.links  = new ArrayList<Node>(0);
 
         this.infected = false;
-        this.attacks = new ArrayList<String>(0);
+        this.attacks = new ArrayList<Attack>(0);
         this.alerts = 0;
     }
 
     //getters, may add more as time goes on
     public String getName() { return this.name; }
+    public boolean getActiveStatus() { return this.active; }
+    public boolean getFirewallStatus() { return this.firewall; }
+    public ArrayList<Attack> getAttacks() { return this.attacks; }
 
     //class methods
-
-    /*public void injectVirus() {
-        if (this.firewall == true) {
-            //add virus to attacks array
-        }
-        else {
+    public void injectVirus(Attack aVirus) {
+        //TODO: add detection for viruses within a certain period of time to sound off an alert
+        if (this.firewall == false) {
             this.infected = true;
-            //add virus to attacks array
         }
-
-    }*/
+        this.attacks.add(aVirus);
+    }
 
 
 }

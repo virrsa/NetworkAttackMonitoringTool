@@ -10,7 +10,8 @@ public class main {
         Scanner attackScanner = new Scanner(attackInput);
         Scanner graphScanner = new Scanner(graphInput);
 
-        //adds nodes to the arraylist given a Graph.txt file
+        //TODO: look up graphs in java
+        //adds nodes to the arraylist given a Graph.txt file, may be changed later to another data type
         ArrayList<Node> nodes = new ArrayList<Node>(0);
 
         while (graphScanner.hasNext()) {
@@ -28,6 +29,25 @@ public class main {
             }
             else {
                 nodes.add(new Node(nName, nCoordinates, false));
+            }
+        }
+
+        //injects attacks into nodes given an Attack.txt file.
+        while (attackScanner.hasNext()) {
+            String line = attackScanner.nextLine();
+            String[] parts = line.split(", ");
+            String node = parts[0];
+            String type = parts[1];
+            String date = parts[2];
+            String time = parts[3];
+
+            Attack virus = new Attack(node, type, date, time);
+
+            for (int i = 0; i < nodes.size(); i++) {
+                if (node.equals(nodes.get(i).getName())) {
+                    nodes.get(i).injectVirus(virus);
+                    break;
+                }
             }
         }
 
