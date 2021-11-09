@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 public class Node {
     //class members
@@ -10,7 +12,9 @@ public class Node {
 
     private boolean infected;
     //TODO: look for a better data structure to store attacks(?)
-    private ArrayList<Attack> attacks;
+    // Lets use a HashMap that has a key and the attack information
+    //private ArrayList<Attack> attacks; (delete this line if you agree on using Maps)
+    private Map<Integer, Attack> attacks = new HashMap<>();
     private int alerts;
 
     public Node(String nName, String nCoordinates, boolean nFirewall) {
@@ -21,24 +25,25 @@ public class Node {
         this.links  = new ArrayList<Node>(0);
 
         this.infected = false;
-        this.attacks = new ArrayList<Attack>(0);
+        //this.attacks = new ArrayList<Attack>(0); //(delete this line if you agree)
+        //this.attacks.put(0, attacks); // Not needed maps don't need to be initialized anyways. (delete this line if you agree)
         this.alerts = 0;
     }
 
-    //getters, may add more as time goes on
+       //getters, may add more as time goes on
     public String getName() { return this.name; }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
-    public ArrayList<Attack> getAttacks() { return this.attacks; }
+    public String getCoordinates() { return this.coordinates; }
+    public Map<Integer, Attack> getAttacks() { return this.attacks; }   // added another getter
+
 
     //class methods
-    public void injectVirus(Attack aVirus) {
+    public void injectVirus(int location, Attack aVirus) {
         //TODO: add detection for viruses within a certain period of time to sound off an alert
         if (this.firewall == false) {
             this.infected = true;
         }
-        this.attacks.add(aVirus);
+        this.attacks.put(location,aVirus); // Store our location and virus into the nodes attack map
     }
-
-
 }
