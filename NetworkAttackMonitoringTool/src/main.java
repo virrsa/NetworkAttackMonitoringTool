@@ -16,7 +16,7 @@ public class main {
         Scanner attackScanner = new Scanner(attackInput);
         Scanner graphScanner = new Scanner(graphInput);
 
-        //TODO: look up graphs in java
+        //TODO: Idk whatever is after graphs
         //adds nodes to the hashmap given a Graph.txt file, may be changed later to another data type
         Map<String,Node> nodes = new HashMap<>();
 
