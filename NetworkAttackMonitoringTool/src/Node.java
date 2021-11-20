@@ -8,7 +8,7 @@ public class Node {
     private String coordinates;
     private boolean active;
     private boolean firewall;
-    private Map<String,Node> links = new HashMap<>();;
+    private Map<String,Node> links = new HashMap<>();
 
     private boolean infected;
     private Map<String,Attack> attacks = new HashMap<>();

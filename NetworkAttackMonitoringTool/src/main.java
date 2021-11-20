@@ -1,6 +1,7 @@
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.awt.desktop.AppReopenedEvent;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ public class main {
         Scanner attackScanner = new Scanner(attackInput);
         Scanner graphScanner = new Scanner(graphInput);
 
-        //TODO: look up graphs in java
+        //TODO: Idk whatever is after graphs
         //adds nodes to the hashmap given a Graph.txt file, may be changed later to another data type
         Map<String,Node> nodes = new HashMap<>();
 
@@ -60,5 +61,15 @@ public class main {
             nodes.get(node).injectVirus(type, virus);
         }
 
+        Graph graph = new Graph();
+        for(String node : nodes.keySet())
+        {
+            graph.addVertex(node);
+            for(String link : nodes.get(node).getLinks().keySet())
+            {
+                graph.addEdge(node, link, false);   // Biodirectional was already setup therefore false
+            }
+        }
+        //graph.printGraph(); // Want to see the connections uncomment me then!
     }
 }
