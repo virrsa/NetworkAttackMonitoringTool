@@ -99,20 +99,6 @@ public class main {
             attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
         }
 
-        /* No longer used (We can remove it)
-        Scanner attackScanner2 = new Scanner(attackInput);
-        while (attackScanner2.hasNext()) {
-            String line = attackScanner2.nextLine();
-            String[] parts = line.split(", ");
-            String node = parts[0];
-            String type = parts[1];
-            String date = parts[2];
-            String time = parts[3];
-
-            Attack virus = new Attack(node, type, date, time);
-            nodes.get(node).injectVirus(type, virus);
-        }*/
-
         Graph graph = new Graph();
         for(String node : nodes.keySet())
         {
@@ -122,8 +108,6 @@ public class main {
                 graph.addEdge(node, link, false);   // Bidirectional was already setup therefore false
             }
         }
-        graph.printGraph(); // Want to see the connections uncomment me then!
-
-
+        //graph.printGraph(); // Want to see the connections uncomment me then!
     }
 }
