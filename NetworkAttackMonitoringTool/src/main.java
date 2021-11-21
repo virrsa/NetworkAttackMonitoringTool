@@ -66,6 +66,9 @@ public class main {
                                     // hence, the data of attackfileClone is at the same location of attackfile
         }
 
+        Graph graph = new Graph();  // create a graph
+        //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
+
         //injects attacks into nodes given an Attack.txt file.
         for(String i : dateList)    // Loops through our data list
         {
@@ -86,22 +89,13 @@ public class main {
                    // System.out.println("----------------------------");
 
                     Attack virus = new Attack(node, type, date, time);
-                    nodes.get(node).injectVirus(type, virus);
+                    nodes.get(node).injectVirus(nodes, type, virus);
                     break;  // We don't need to keep looping through our attackFileClone
                 }
             }
             attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
         }
 
-        Graph graph = new Graph();
-        for(String node : nodes.keySet())
-        {
-            graph.addVertex(node);
-            for(String link : nodes.get(node).getLinks().keySet())
-            {
-                graph.addEdge(node, link, false);   // Bidirectional was already setup therefore false
-            }
-        }
-        //graph.printGraph(); // Want to see the connections uncomment me then!
+       //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
     }
 }

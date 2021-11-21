@@ -59,11 +59,27 @@ public class Graph {
         if (map.get(srcVertex).contains(dstVertex)) { System.out.println("The graph has an edge between "+ srcVertex + " and " + dstVertex + "."); }
         else { System.out.println("There is no edge between "+ srcVertex + " and " + dstVertex + "."); }
     }
+
+    public void updateGraph(Map<String,Node> nodes, Graph graph)
+    {
+        for(String node : nodes.keySet())
+        {
+            graph.addVertex(node);
+            for(String link : nodes.get(node).getLinks().keySet())
+            {
+                graph.addEdge(node, link, false);   // Bidirectional was already setup therefore false
+            }
+        }
+    }
+
     /*
      * Prints the vertex with each edge
      */
-    public void printGraph()
+    public void printGraph(Map<String,Node> nodes, Graph graph)
     {
+        graph.updateGraph(nodes, graph);    // update the graph first
+
+        System.out.print("\n");   // make sure we start after a new line
         for (String sourceNode : map.keySet())
         {
             System.out.print(sourceNode.toString() + ": ");

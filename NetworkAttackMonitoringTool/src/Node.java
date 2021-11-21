@@ -1,3 +1,4 @@
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,10 +37,19 @@ public class Node {
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
 
+    // Removes the links from an inactive node and from nodes pointing to the inactive node
+    private void removeConnections(Map<String,Node> source)
+    {
+        this.links.keySet().removeAll(this.getLinks().keySet());
+        for(String i : source.keySet())
+        {
+            source.get(i).links.remove(this.name);
+        }
+    }
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
-    public void injectVirus(String type, Attack aVirus) {
+    public void injectVirus(Map<String,Node>nodes, String type, Attack aVirus) {
         //increments number of attacks
         numAttacks++;
         //checks if the node has a firewall. If it does, it does not get infected.
@@ -94,6 +104,8 @@ public class Node {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
                 //TODO: remove connections from this node and nodes connected to this node
+                // I guess its done? You can remove this todo Sarah if you are satisfied
+                removeConnections(nodes);
             }
         }
     }
