@@ -1,4 +1,5 @@
 import javax.rmi.ssl.SslRMIClientSocketFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,19 +38,11 @@ public class Node {
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
 
-    // Removes the links from an inactive node and from nodes pointing to the inactive node
-    private void removeConnections(Map<String,Node> source)
-    {
-        this.links.keySet().removeAll(this.getLinks().keySet());
-        for(String i : source.keySet())
-        {
-            source.get(i).links.remove(this.name);
-        }
-    }
+
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
-    public void injectVirus(Map<String,Node>nodes, String type, Attack aVirus) {
+    public void injectVirus(Map<String,Node> nodes, String type, Attack aVirus) {
         //increments number of attacks
         numAttacks++;
         //checks if the node has a firewall. If it does, it does not get infected.
@@ -96,6 +89,12 @@ public class Node {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
                         //TODO: inject virus at all connections to this node.
+                        for(String node: this.links.keySet())
+                        {
+                            // If you run the below code it will cause an overflow as the program will never finish it.
+                            // TODO: Fix this issue but idk how?
+                            //nodes.get(node).injectVirus(nodes, type, aVirus);
+                        }
                     }
                 }
             }
@@ -104,8 +103,14 @@ public class Node {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
                 //TODO: remove connections from this node and nodes connected to this node
-                // I guess its done? You can remove this todo Sarah if you are satisfied
-                removeConnections(nodes);
+                // I guess its done? You can remove this Sarah if you are satisfied
+
+                // Removes the links from an inactive node and from nodes pointing to the inactive node
+                this.links.keySet().removeAll(this.getLinks().keySet());
+                for(String node : nodes.keySet())
+                {
+                    nodes.get(node).links.remove(this.name);
+                }
             }
         }
     }

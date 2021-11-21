@@ -96,6 +96,6 @@ public class main {
             attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
         }
 
-       //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
+        //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
     }
 }
