@@ -1,16 +1,10 @@
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import java.awt.*;
-import java.awt.desktop.AppReopenedEvent;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.*;
 import java.io.FileNotFoundException;
-import java.util.stream.StreamSupport;
 
 public class main {
-    public static void main(String args[]) throws FileNotFoundException {
+    public static void main(String args[]) throws FileNotFoundException, IOException {
         File attackInput = new File("Attack.txt");
         File graphInput = new File("Graph.txt");
         Scanner attackScanner = new Scanner(attackInput);
@@ -57,8 +51,8 @@ public class main {
         ArrayList<String> dateList = new ArrayList<String>();
         for(String i : attackfile)
         {
-            String[] parts = i.split(", ");
-            dateList.add(parts[2]);
+            String[] parts = i.split(",");
+            dateList.add(parts[2] + parts[3]); // parts[2] = yyyy-MM-dd ; parts[3] = HH:mm:ss
         }
 
         // Sort the dates in order
@@ -79,8 +73,8 @@ public class main {
             for(String j : attackfileClone)     // Loops through our lines we saved from attackfile.txt
             {
                 jLineCopy = j;      // Whatever line j is at copy it into jLineCopy
-                String[] parts = j.split(", ");
-                if(i.compareTo(parts[2]) == 0)  // If the dates are the same then we can inject it!
+                String[] parts = j.split(",");
+                if(i.compareTo(parts[2] + parts[3]) == 0)  // If the dates are the same then we can inject it!
                 {
                     String node = parts[0];
                     String type = parts[1];

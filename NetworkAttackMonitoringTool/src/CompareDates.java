@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
 public class CompareDates implements Comparator<String> {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public int compare(String date1, String date2)
     {
@@ -11,12 +11,12 @@ public class CompareDates implements Comparator<String> {
         {
             // 0 means the dates are equal. -1 means date2 is after date 1. 1 means date 1 is after date2
             return dateFormat.parse(date1).compareTo(dateFormat.parse(date2));
-        } catch (ParseException e)
+        } catch (ParseException e)  // A format error can occur when the dates aren't following the SimpleDateFormat pattern
         {
-            System.out.print("Bad format Unable to Compare");
+            System.out.println("Bad format Unable to Compare:" +date1 +" with" +date2);
             e.printStackTrace();
+            return 2;   // If the comparison failed we still need to return a value
         }
-            return 0;   // Fail-safe, if you could not compare
-        }
+    }
 }
 

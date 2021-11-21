@@ -1,7 +1,6 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 public class Node {
     //class members
     private String name;
@@ -71,7 +70,7 @@ public class Node {
                     String[] parts2 = this.attacks.get(type).getTime().get(this.attacks.get(type).getTime().size()-1).split(":");
                     //checks if the viruses are within two minutes apart from each other
                     if (parts1[0].equals(parts2[0]) && Integer.valueOf(parts1[1]) - Integer.valueOf(parts2[1]) <= 2) {
-                        System.out.println("Alert: Node " + this.name + " has been infected by multiple instances of the virus " + type + " at " + aVirus.getTime().get(0) + ".");
+                        System.out.println("Alert: Node " + this.name + " has been infected by multiple instances of the virus" + type + " on" + aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.alerts++;
                     }
                 }
@@ -84,7 +83,7 @@ public class Node {
                     String[] parts2 = this.attacks.get(type).getTime().get(this.attacks.get(type).getTime().size()-3).split(":");
                     //checks if the viruses are within four minutes apart from each other
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
-                        System.out.println("Outbreak triggered at node " + this.name + " at " + aVirus.getTime().get(0) + ".");
+                        System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
                         //TODO: inject virus at all connections to this node.
                     }
