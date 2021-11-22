@@ -52,10 +52,11 @@ public class Node {
         }
         //if the node is active, inject the virus.
         if (this.active == true) {
-            //TODO: add an option that ignores a virus if the same virus already exists within the list
             //checks if the same type of virus has already infected the node. If so, add the date and time to the array.
             //if the virus has already infected the node, add the date and time of the virus to the date/time arrays.
             if (this.attacks.containsKey(type)) {
+                //TODO: add an option that ignores a virus if the same virus already exists within the list (Jawad: DONE; Plz Confirm)
+                if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
             }
@@ -88,13 +89,8 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        //TODO: inject virus at all connections to this node.
-                        for(String node: this.links.keySet())
-                        {
-                            // If you run the below code it will cause an overflow as the program will never finish it.
-                            // TODO: Fix this issue but idk how?
-                            //nodes.get(node).injectVirus(nodes, type, aVirus);
-                        }
+                        //TODO: inject virus at all connections to this node. (Jawad: DONE; Plz Confirm)
+                        for(String node: this.links.keySet()) { nodes.get(node).injectVirus(nodes, type, aVirus); } // Injects a virus at all the current nodes connections
                     }
                 }
             }
@@ -102,15 +98,10 @@ public class Node {
             else if (this.attacks.size() >= 2 && numAttacks >= 6 && this.firewall == false) {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
-                //TODO: remove connections from this node and nodes connected to this node
-                // I guess its done? You can remove this Sarah if you are satisfied
-
+                //TODO: remove connections from this node and nodes connected to this node (Jawad: DONE; Plz Confirm)
                 // Removes the links from an inactive node and from nodes pointing to the inactive node
                 this.links.keySet().removeAll(this.getLinks().keySet());
-                for(String node : nodes.keySet())
-                {
-                    nodes.get(node).links.remove(this.name);
-                }
+                for(String node : nodes.keySet()) { nodes.get(node).links.remove(this.name); }
             }
         }
     }
