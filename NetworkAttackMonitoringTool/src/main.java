@@ -96,5 +96,104 @@ public class main {
             attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
         }
         //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
+
+        System.out.println(" ");
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Welcome to the Network Attack Monitoring Tool.");
+        while (true) {
+            System.out.println("Would you like to view node statistics or viruses? STAT/VIRUS/END (Statistics/Viruses):");
+            String userIn = input.nextLine();
+            if (userIn.equals("STAT") || userIn.equals("stat")) {
+                while (true) {
+                    System.out.println("Enter INF/FIR/FIA/OUT/INA/END (Nodes Infected/Nodes with Firewall/Firewalls Attacked/Nodes with outbreaks/Inactive Nodes):");
+                    userIn = input.nextLine();
+
+                    if (userIn.equals("INF") || userIn.equals("inf")) {
+                        int count = 0;
+                        //displays number of nodes that have been infected
+                        for (Map.Entry<String, Node> node : nodes.entrySet())
+                            if (node.getValue().getInfectedStatus()) {
+                                System.out.println("Node " + node.getKey() + " has been infected.");
+                                count++;
+                            }
+                        System.out.println("Number of nodes that have been infected: " + count);
+                    }
+                    else if (userIn.equals("FIR") || userIn.equals("fir")) {
+                        int count = 0;
+                        //displays number of nodes that have a firewall
+                        for (Map.Entry<String, Node> node : nodes.entrySet())
+                            if (node.getValue().getFirewallStatus()) {
+                                System.out.println("Node " + node.getKey() + " has a firewall.");
+                                count++;
+                            }
+                        System.out.println("Number of nodes that have a firewall: " + count);
+                    }
+                    else if (userIn.equals("FIA") || userIn.equals("fia")) {
+                        int count = 0;
+                        //displays nodes that have a firewall and have been attacked
+                        for (Map.Entry<String, Node> node : nodes.entrySet())
+                            if (node.getValue().getFirewallStatus() == true && node.getValue().getAttacks().size() > 0) {
+                                System.out.println("Node " + node.getKey() + " has been attacked.");
+                                count++;
+                            }
+                        System.out.println("Number of nodes that have a firewall and has been attacked: " + count);
+                    }
+                    else if (userIn.equals("OUT") || userIn.equals("out")) {
+                        int count = 0;
+                        //displays nodes that have gotten an outbreak
+                        for (Map.Entry<String, Node> node : nodes.entrySet())
+                            if (node.getValue().getOutbreakStatus()) {
+                                System.out.println("Node " + node.getKey() + " caused an outbreak.");
+                                count++;
+                            }
+                        System.out.println("Number of nodes that had an outbreak: " + count);
+                    }
+                    else if (userIn.equals("INA") || userIn.equals("ina")) {
+                        int count = 0;
+                        //displays number of nodes that are inactive
+                        for (Map.Entry<String, Node> node : nodes.entrySet())
+                            if (!node.getValue().getActiveStatus()) {
+                                System.out.println("Node " + node.getKey() + " is inactive.");
+                                count++;
+                            }
+                        System.out.println("Number of nodes that are inactive: " + count);
+                    }
+                    else if (userIn.equals("END") || userIn.equals("end")) {
+                        break;
+                    }
+                }
+            }
+            else if (userIn.equals("VIRUS") || userIn.equals("virus")) {
+                while(true) {
+                    System.out.println("What node would you like get virus statistics on? (END to exit) ");
+                    userIn = input.nextLine();
+                    if (userIn.equals("END") || userIn.equals("end")) {
+                        break;
+                    }
+                    userIn = userIn.substring(0,1).toUpperCase() + userIn.substring(1).toLowerCase();
+                    //TODO: Sort arrays by size(???)
+                    //prints viruses, along with the date and time it was infected on
+                    try {
+                        for (Map.Entry<String, Attack> virus : nodes.get(userIn).getAttacks().entrySet()) {
+                            System.out.println("For node " + userIn + ", virus type" + virus.getKey() + " was injected " + nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().size() + " time(s).");
+                            System.out.println("Virus type" + virus.getKey() + " was injected at the following times: ");
+                            for (int i = 0; i < nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().size(); i++) {
+                                System.out.println(nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().get(i) + " at" + nodes.get(userIn).getAttacks().get(virus.getKey()).getTime().get(i));
+                            }
+                        }
+                    }
+                    //if the input is a node that doesn't exist, catch the exception and ask the node once again
+                    catch(Exception e) {
+                        System.out.println("Please enter a valid node.");
+                    }
+                }
+            }
+            else if (userIn.equals("END") || userIn.equals("end")) {
+                break;
+            }
+        }
+        System.out.println("Exiting out of Network Attack Monitoring Tool.");
+        //TODO: Create safe routes
     }
 }

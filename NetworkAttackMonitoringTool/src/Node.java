@@ -34,6 +34,8 @@ public class Node {
     public String getName() { return this.name; }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
+    public boolean getInfectedStatus() { return this.infected; }
+    public boolean getOutbreakStatus() { return this.outbreak; }
     public String getCoordinates() { return this.coordinates; }
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
@@ -47,15 +49,15 @@ public class Node {
         numAttacks++;
         //checks if the node has a firewall. If it does, it does not get infected.
         //instead it keeps track of the attacks attempted against the node.
-        if (this.firewall == false) {
+        if (!this.firewall) {
             this.infected = true;
         }
         //if the node is active, inject the virus.
-        if (this.active == true) {
+        if (this.active) {
             //checks if the same type of virus has already infected the node. If so, add the date and time to the array.
             //if the virus has already infected the node, add the date and time of the virus to the date/time arrays.
             if (this.attacks.containsKey(type)) {
-                //TODO: add an option that ignores a virus if the same virus already exists within the list (Jawad: DONE; Plz Confirm)
+                //ignores a virus if the same virus already exists within the list.
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
@@ -89,7 +91,6 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        //TODO: inject virus at all connections to this node. (Jawad: DONE; Plz Confirm)
                         for(String node: this.links.keySet()) { nodes.get(node).injectVirus(nodes, type, aVirus); } // Injects a virus at all the current nodes connections
                     }
                 }
@@ -98,8 +99,6 @@ public class Node {
             else if (this.attacks.size() >= 2 && numAttacks >= 6 && this.firewall == false) {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
-                //TODO: remove connections from this node and nodes connected to this node (Jawad: DONE; Plz Confirm)
-                // Removes the links from an inactive node and from nodes pointing to the inactive node
                 this.links.keySet().removeAll(this.getLinks().keySet());
                 for(String node : nodes.keySet()) { nodes.get(node).links.remove(this.name); }
             }
