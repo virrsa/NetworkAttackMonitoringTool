@@ -42,7 +42,6 @@ public class Node {
     public Map<String, Attack> getAttacks() { return this.attacks; }
 
     // Finds and returns the current number of attacks
-    /* Fixes the bug?
     public int updateNumAttacks() {
         int newNum = 0;
 
@@ -52,7 +51,7 @@ public class Node {
         if (this.attacks.get(" green") != null) { newNum = newNum + this.attacks.get(" green").getDate().size(); }
 
         return newNum;
-    }*/
+    }
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
@@ -76,14 +75,14 @@ public class Node {
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
 
                 //increments number of attacks
-                numAttacks++; //= updateNumAttacks();
+                numAttacks = updateNumAttacks();
             }
             //if the virus hasn't infected the node, add the virus itself to the attack list.
             else {
                 this.attacks.put(type, aVirus); // Store our location and virus into the nodes attack map
 
                 //increments number of attacks
-                numAttacks++; //= updateNumAttacks();
+                numAttacks = updateNumAttacks();
             }
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
