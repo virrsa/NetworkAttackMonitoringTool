@@ -1,6 +1,7 @@
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Node {
@@ -40,20 +41,32 @@ public class Node {
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
 
+    // Finds and returns the current number of attacks
+    /* Fixes the bug?
+    public int updateNumAttacks() {
+        int newNum = 0;
 
+        if (this.attacks.get(" black") != null) { newNum = newNum + this.attacks.get(" black").getDate().size(); }
+        if (this.attacks.get(" red") != null) { newNum = newNum + this.attacks.get(" red").getDate().size(); }
+        if (this.attacks.get(" blue") != null) { newNum = newNum + this.attacks.get(" blue").getDate().size(); }
+        if (this.attacks.get(" green") != null) { newNum = newNum + this.attacks.get(" green").getDate().size(); }
+
+        return newNum;
+    }*/
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
     public void injectVirus(Map<String,Node> nodes, String type, Attack aVirus) {
-        //increments number of attacks
-        numAttacks++;
+
         //checks if the node has a firewall. If it does, it does not get infected.
         //instead it keeps track of the attacks attempted against the node.
         if (!this.firewall) {
             this.infected = true;
         }
+
         //if the node is active, inject the virus.
         if (this.active) {
+
             //checks if the same type of virus has already infected the node. If so, add the date and time to the array.
             //if the virus has already infected the node, add the date and time of the virus to the date/time arrays.
             if (this.attacks.containsKey(type)) {
@@ -61,10 +74,16 @@ public class Node {
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
+
+                //increments number of attacks
+                numAttacks++; //= updateNumAttacks();
             }
             //if the virus hasn't infected the node, add the virus itself to the attack list.
             else {
                 this.attacks.put(type, aVirus); // Store our location and virus into the nodes attack map
+
+                //increments number of attacks
+                numAttacks++; //= updateNumAttacks();
             }
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
