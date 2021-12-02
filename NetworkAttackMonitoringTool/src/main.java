@@ -97,7 +97,7 @@ public class main {
         }
         //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
 
-        System.out.println(" ");
+        System.out.print("\n");
 
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the Network Attack Monitoring Tool.");

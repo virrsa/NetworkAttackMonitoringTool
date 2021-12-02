@@ -41,17 +41,6 @@ public class Node {
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
 
-    // Finds and returns the current number of attacks
-    public int updateNumAttacks() {
-        int newNum = 0;
-
-        if (this.attacks.get(" black") != null) { newNum = newNum + this.attacks.get(" black").getDate().size(); }
-        if (this.attacks.get(" red") != null) { newNum = newNum + this.attacks.get(" red").getDate().size(); }
-        if (this.attacks.get(" blue") != null) { newNum = newNum + this.attacks.get(" blue").getDate().size(); }
-        if (this.attacks.get(" green") != null) { newNum = newNum + this.attacks.get(" green").getDate().size(); }
-
-        return newNum;
-    }
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
@@ -71,20 +60,20 @@ public class Node {
             if (this.attacks.containsKey(type)) {
                 //ignores a virus if the same virus already exists within the list.
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
+
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
 
                 //increments number of attacks
                 numAttacks++;
-                //numAttacks = updateNumAttacks();
             }
             //if the virus hasn't infected the node, add the virus itself to the attack list.
             else {
-                this.attacks.put(type, aVirus); // Store our location and virus into the nodes attack map
+                Attack newVirus = new Attack(aVirus);   // create the same attack at a new location in memory
+                this.attacks.put(type, newVirus); // Store our location and virus into the nodes attack map
 
                 //increments number of attacks
                 numAttacks++;
-                //numAttacks = updateNumAttacks();
             }
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
@@ -111,7 +100,7 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus);}
+                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus);} // Injects a virus at all the current nodes connections
                     }
                 }
             }

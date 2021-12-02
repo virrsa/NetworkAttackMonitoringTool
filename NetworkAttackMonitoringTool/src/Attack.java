@@ -17,6 +17,13 @@ public class Attack {
         this.time = new ArrayList<String>(0);
         this.time.add(aTime);
     }
+    // copy constructor
+    public Attack(Attack oldAttack){
+        this.node = oldAttack.node;
+        this.type = oldAttack.type;
+        this.date = (ArrayList<String>)oldAttack.date.clone();
+        this.time = (ArrayList<String>)oldAttack.time.clone();
+    }
 
     //getters
     public String getNode() { return this.node; }
