@@ -103,13 +103,14 @@ public class main {
         System.out.println("Welcome to the Network Attack Monitoring Tool.");
         while (true) {
             System.out.println("Would you like to view node statistics, virus statistics or create a safe route? STAT/VIRUS/SAFE/END (Statistics/Viruses/Safe Routes):");
-            String userIn = input.nextLine();
-            if (userIn.equals("STAT") || userIn.equals("stat")) {
+            String userIn = input.nextLine().toUpperCase();
+
+            if (userIn.equals("STAT")) {
                 while (true) {
                     System.out.println("Enter INF/FIR/FIA/OUT/INA/END (Nodes Infected/Nodes with Firewall/Firewalls Attacked/Nodes with outbreaks/Inactive Nodes):");
-                    userIn = input.nextLine();
+                    userIn = input.nextLine().toUpperCase();
 
-                    if (userIn.equals("INF") || userIn.equals("inf")) {
+                    if (userIn.equals("INF")) {
                         int count = 0;
                         //displays number of nodes that have been infected
                         for (Map.Entry<String, Node> node : nodes.entrySet())
@@ -119,7 +120,7 @@ public class main {
                             }
                         System.out.println("Number of nodes that have been infected: " + count);
                     }
-                    else if (userIn.equals("FIR") || userIn.equals("fir")) {
+                    else if (userIn.equals("FIR")) {
                         int count = 0;
                         //displays number of nodes that have a firewall
                         for (Map.Entry<String, Node> node : nodes.entrySet())
@@ -129,7 +130,7 @@ public class main {
                             }
                         System.out.println("Number of nodes that have a firewall: " + count);
                     }
-                    else if (userIn.equals("FIA") || userIn.equals("fia")) {
+                    else if (userIn.equals("FIA")) {
                         int count = 0;
                         //displays nodes that have a firewall and have been attacked
                         for (Map.Entry<String, Node> node : nodes.entrySet())
@@ -139,7 +140,7 @@ public class main {
                             }
                         System.out.println("Number of nodes that have a firewall and has been attacked: " + count);
                     }
-                    else if (userIn.equals("OUT") || userIn.equals("out")) {
+                    else if (userIn.equals("OUT")) {
                         int count = 0;
                         //displays nodes that have gotten an outbreak
                         for (Map.Entry<String, Node> node : nodes.entrySet())
@@ -149,7 +150,7 @@ public class main {
                             }
                         System.out.println("Number of nodes that had an outbreak: " + count);
                     }
-                    else if (userIn.equals("INA") || userIn.equals("ina")) {
+                    else if (userIn.equals("INA")) {
                         int count = 0;
                         //displays number of nodes that are inactive
                         for (Map.Entry<String, Node> node : nodes.entrySet())
@@ -159,16 +160,16 @@ public class main {
                             }
                         System.out.println("Number of nodes that are inactive: " + count);
                     }
-                    else if (userIn.equals("END") || userIn.equals("end")) {
+                    else if (userIn.equals("END")) {
                         break;
                     }
                 }
             }
-            else if (userIn.equals("VIRUS") || userIn.equals("virus")) {
+            else if (userIn.equals("VIRUS")) {
                 while(true) {
                     System.out.println("What node would you like get virus statistics on? (END to exit) ");
-                    userIn = input.nextLine();
-                    if (userIn.equals("END") || userIn.equals("end")) {
+                    userIn = input.nextLine().toUpperCase();
+                    if (userIn.equals("END")) {
                         break;
                     }
                     userIn = userIn.substring(0,1).toUpperCase() + userIn.substring(1).toLowerCase();
@@ -190,12 +191,15 @@ public class main {
                 }
             }
             //TODO: Create safe routes
-            else if (userIn.equals("SAFE") || userIn.equals("safe")) {
+            else if (userIn.equals("SAFE")) {
 
                 System.out.println("Which source node would you like to use for the safe route?");
-                String sourceIn = input.nextLine();
+                String sourceInTemp = input.nextLine().toLowerCase();
+                String sourceIn = sourceInTemp.substring(0,1).toUpperCase() + sourceInTemp.substring(1);
                 System.out.println("Which destination node would you like to use for the safe route?");
-                String destIn = input.nextLine();
+                String destInTemp = input.nextLine().toLowerCase();
+                String destIn = destInTemp.substring(0,1).toUpperCase() + destInTemp.substring(1);
+
                 try {
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
@@ -211,7 +215,7 @@ public class main {
                     System.out.println("Please enter a valid node.");
                 }
             }
-            else if (userIn.equals("END") || userIn.equals("end")) {
+            else if (userIn.equals("END")) {
                 break;
             }
         }
