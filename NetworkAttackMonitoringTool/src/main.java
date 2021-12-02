@@ -102,7 +102,7 @@ public class main {
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the Network Attack Monitoring Tool.");
         while (true) {
-            System.out.println("Would you like to view node statistics or viruses? STAT/VIRUS/END (Statistics/Viruses):");
+            System.out.println("Would you like to view node statistics, virus statistics or create a safe route? STAT/VIRUS/SAFE/END (Statistics/Viruses/Safe Routes):");
             String userIn = input.nextLine();
             if (userIn.equals("STAT") || userIn.equals("stat")) {
                 while (true) {
@@ -189,11 +189,32 @@ public class main {
                     }
                 }
             }
+            //TODO: Create safe routes
+            else if (userIn.equals("SAFE") || userIn.equals("safe")) {
+
+                System.out.println("Which source node would you like to use for the safe route?");
+                String sourceIn = input.nextLine();
+                System.out.println("Which destination node would you like to use for the safe route?");
+                String destIn = input.nextLine();
+                try {
+                    Node sNode = nodes.get(sourceIn);
+                    Node dNode = nodes.get(destIn);
+
+                    if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) {
+                        System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");
+                    }
+                    else {
+                        System.out.println("Route can be generated");
+                    }
+                }
+                catch(Exception e) {
+                    System.out.println("Please enter a valid node.");
+                }
+            }
             else if (userIn.equals("END") || userIn.equals("end")) {
                 break;
             }
         }
         System.out.println("Exiting out of Network Attack Monitoring Tool.");
-        //TODO: Create safe routes
     }
 }
