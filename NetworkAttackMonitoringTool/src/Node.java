@@ -55,7 +55,7 @@ public class Node {
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
-    public void injectVirus(Map<String,Node> nodes, String type, Attack aVirus) {
+    public void injectVirus(String type, Attack aVirus) {
 
         //checks if the node has a firewall. If it does, it does not get infected.
         //instead it keeps track of the attacks attempted against the node.
@@ -75,14 +75,16 @@ public class Node {
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
 
                 //increments number of attacks
-                numAttacks = updateNumAttacks();
+                numAttacks++;
+                //numAttacks = updateNumAttacks();
             }
             //if the virus hasn't infected the node, add the virus itself to the attack list.
             else {
                 this.attacks.put(type, aVirus); // Store our location and virus into the nodes attack map
 
                 //increments number of attacks
-                numAttacks = updateNumAttacks();
+                numAttacks++;
+                //numAttacks = updateNumAttacks();
             }
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
@@ -109,7 +111,7 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        for(String node: this.links.keySet()) { nodes.get(node).injectVirus(nodes, type, aVirus); } // Injects a virus at all the current nodes connections
+                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus);}
                     }
                 }
             }
@@ -117,8 +119,8 @@ public class Node {
             else if (this.attacks.size() >= 2 && numAttacks >= 6 && this.firewall == false) {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
-                this.links.keySet().removeAll(this.getLinks().keySet());
-                for(String node : nodes.keySet()) { nodes.get(node).links.remove(this.name); }
+                for(String node : this.links.keySet()) {this.links.get(node).links.remove(this.name);}  // Remove all the cities connected to the current city
+                this.links.keySet().removeAll(this.getLinks().keySet());    // Remove all the cities the current city connects to
             }
         }
     }

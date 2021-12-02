@@ -89,7 +89,7 @@ public class main {
                    // System.out.println("----------------------------");
 
                     Attack virus = new Attack(node, type, date, time);
-                    nodes.get(node).injectVirus(nodes, type, virus);
+                    nodes.get(node).injectVirus(type, virus);
                     break;  // We don't need to keep looping through our attackFileClone
                 }
             }
