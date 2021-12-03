@@ -31,6 +31,7 @@ public class Node {
     //getters, may add more as time goes on
     public String getName() { return this.name; }
     public Integer getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
+    public Integer getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
     public boolean getInfectedStatus() { return this.infected; }
@@ -76,7 +77,6 @@ public class Node {
             if (this.attacks.containsKey(type)) {
                 //ignores a virus if the same virus already exists within the list.
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
-
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
 
