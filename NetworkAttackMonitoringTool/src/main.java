@@ -160,7 +160,7 @@ public class main {
                             }
                         System.out.println("Number of nodes that are inactive: " + count);
                     }
-                    else if (userIn.equals("END")) {
+                    else if (userIn.equals("END") || userIn.equals("EXIT")) {
                         break;
                     }
                 }
@@ -169,20 +169,18 @@ public class main {
                 while(true) {
                     System.out.println("What node would you like get virus statistics on? (END to exit) ");
                     userIn = input.nextLine().toUpperCase();
-                    if (userIn.equals("END")) {
+                    if (userIn.equals("END") || userIn.equals("EXIT")) {
                         break;
                     }
                     userIn = userIn.substring(0,1).toUpperCase() + userIn.substring(1).toLowerCase();
-                    //TODO: Sort arrays by size(???)
-                    //prints viruses, along with the date and time it was infected on
+
                     try {
-                        for (Map.Entry<String, Attack> virus : nodes.get(userIn).getAttacks().entrySet()) {
-                            System.out.println("For node " + userIn + ", virus type" + virus.getKey() + " was injected " + nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().size() + " time(s).");
-                            System.out.println("Virus type" + virus.getKey() + " was injected at the following times: ");
-                            for (int i = 0; i < nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().size(); i++) {
-                                System.out.println(nodes.get(userIn).getAttacks().get(virus.getKey()).getDate().get(i) + " at" + nodes.get(userIn).getAttacks().get(virus.getKey()).getTime().get(i));
-                            }
-                        }
+                        /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
+                        int redSize = 0, greenSize = 0, blueSize = 0;
+                        if(nodes.get(userIn).getAttacks().containsKey(" red")) { redSize = nodes.get(userIn).getAttacks().get(" red").getDate().size(); }
+                        if(nodes.get(userIn).getAttacks().containsKey(" green")) { greenSize = nodes.get(userIn).getAttacks().get(" green").getDate().size(); }
+                        if(nodes.get(userIn).getAttacks().containsKey(" blue")) { blueSize = nodes.get(userIn).getAttacks().get(" blue").getDate().size(); }
+                        VirusPrint.printVirusOrder(nodes, userIn, redSize, greenSize, blueSize);
                     }
                     //if the input is a node that doesn't exist, catch the exception and ask the node once again
                     catch(Exception e) {
@@ -215,7 +213,7 @@ public class main {
                     System.out.println("Please enter a valid node.");
                 }
             }
-            else if (userIn.equals("END")) {
+            else if (userIn.equals("END") || userIn.equals("EXIT")) {
                 break;
             }
         }

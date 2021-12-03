@@ -1,7 +1,4 @@
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class Node {
@@ -40,6 +37,14 @@ public class Node {
     public String getCoordinates() { return this.coordinates; }
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
+    public Map.Entry<String, Attack> getSpecificAttacks(String Specific) {
+        for (Map.Entry<String, Attack> virus : this.attacks.entrySet()) {
+            if(virus.getKey().contains(Specific)) {
+                return virus;
+            }
+        }
+        return null;
+    }
 
 
     //class methods
