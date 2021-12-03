@@ -30,6 +30,7 @@ public class Node {
 
     //getters, may add more as time goes on
     public String getName() { return this.name; }
+    public Integer getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
     public boolean getInfectedStatus() { return this.infected; }
@@ -46,6 +47,16 @@ public class Node {
         return null;
     }
 
+    /* Gets the size of all the attacks in a node */
+    public void sortArrays() {
+        /* If a node has no attacks then size is set by default to zero */
+        int redSize = 0, greenSize = 0, blueSize = 0;
+        if(this.attacks.containsKey(" red")) { redSize = this.getTypeSize(" red"); }
+        if(this.attacks.containsKey(" green")) { greenSize = this.getTypeSize(" green"); }
+        if(this.attacks.containsKey(" blue")) { blueSize = this.getTypeSize(" blue"); }
+
+        VirusPrint.printVirusOrder(this, redSize, greenSize, blueSize);
+    }
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak

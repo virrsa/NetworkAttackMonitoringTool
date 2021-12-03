@@ -176,11 +176,7 @@ public class main {
 
                     try {
                         /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
-                        int redSize = 0, greenSize = 0, blueSize = 0;
-                        if(nodes.get(userIn).getAttacks().containsKey(" red")) { redSize = nodes.get(userIn).getAttacks().get(" red").getDate().size(); }
-                        if(nodes.get(userIn).getAttacks().containsKey(" green")) { greenSize = nodes.get(userIn).getAttacks().get(" green").getDate().size(); }
-                        if(nodes.get(userIn).getAttacks().containsKey(" blue")) { blueSize = nodes.get(userIn).getAttacks().get(" blue").getDate().size(); }
-                        VirusPrint.printVirusOrder(nodes, userIn, redSize, greenSize, blueSize);
+                        nodes.get(userIn).sortArrays();
                     }
                     //if the input is a node that doesn't exist, catch the exception and ask the node once again
                     catch(Exception e) {
