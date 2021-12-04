@@ -67,7 +67,7 @@ public class main {
         }
 
         Graph graph = new Graph();  // create a graph
-        //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
+        graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
 
         //injects attacks into nodes given an Attack.txt file.
         for(String i : dateList)    // Loops through our data list
@@ -84,12 +84,8 @@ public class main {
                     String date = parts[2];
                     String time = parts[3];
 
-                   // can be removed, but if you want to see it working properly uncomment below
-                   // System.out.println(parts[0] + " "+parts[2] + " "+ parts[3]);
-                   // System.out.println("----------------------------");
-
                     Attack virus = new Attack(node, type, date, time);
-                    nodes.get(node).injectVirus(type, virus);
+                    nodes.get(node).injectVirus(type, virus, graph, nodes);
                     break;  // We don't need to keep looping through our attackFileClone
                 }
             }
@@ -177,6 +173,13 @@ public class main {
                     try {
                         /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
                         nodes.get(userIn).sortArrays();
+                        if (nodes.get(userIn).getActiveStatus()) {
+                            System.out.println("Node " + userIn + " has generated " + nodes.get(userIn).getAlerts() + " alerts and is currently active.");
+                        }
+                        else {
+                            System.out.println("Node " + userIn + " has generated " + nodes.get(userIn).getAlerts() + " alerts and is currently inactive.");
+                        }
+
                     }
                     //if the input is a node that doesn't exist, catch the exception and ask the node once again
                     catch(Exception e) {
@@ -203,6 +206,7 @@ public class main {
                     }
                     else {
                         System.out.println("Route can be generated");
+                        sNode.createSafeRoute(dNode);
                     }
                 }
                 catch(Exception e) {
