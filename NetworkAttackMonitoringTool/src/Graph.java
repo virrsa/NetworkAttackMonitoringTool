@@ -96,7 +96,7 @@ public class Graph {
             for (String connectedTo : map.get(sourceNode)) {
                 System.out.print(connectedTo.toString() + " ");
                 if (map.get(sourceNode).size() != index) {
-                    System.out.print("--> ");
+                    System.out.print("| ");
                 }
                 index++;
             }

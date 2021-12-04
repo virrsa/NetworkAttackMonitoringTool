@@ -165,10 +165,12 @@ public class main {
                 while(true) {
                     System.out.println("What node would you like get virus statistics on? (END to exit) ");
                     userIn = input.nextLine().toUpperCase();
+
                     if (userIn.equals("END") || userIn.equals("EXIT")) {
                         break;
                     }
-                    userIn = userIn.substring(0,1).toUpperCase() + userIn.substring(1).toLowerCase();
+
+                    formatCity(userIn); // Fixes the format of our city name
 
                     try {
                         /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
@@ -191,11 +193,11 @@ public class main {
             else if (userIn.equals("SAFE")) {
 
                 System.out.println("Which source node would you like to use for the safe route?");
-                String sourceInTemp = input.nextLine().toLowerCase();
-                String sourceIn = sourceInTemp.substring(0,1).toUpperCase() + sourceInTemp.substring(1);
+                String sourceInTemp = input.nextLine().toUpperCase();
+                String sourceIn = formatCity(sourceInTemp); // Fixes the format of our city name
                 System.out.println("Which destination node would you like to use for the safe route?");
-                String destInTemp = input.nextLine().toLowerCase();
-                String destIn = destInTemp.substring(0,1).toUpperCase() + destInTemp.substring(1);
+                String destInTemp = input.nextLine().toUpperCase();
+                String destIn = formatCity(destInTemp); // Fixes the format of our city name
 
                 try {
                     Node sNode = nodes.get(sourceIn);
@@ -218,5 +220,21 @@ public class main {
             }
         }
         System.out.println("Exiting out of Network Attack Monitoring Tool.");
+    }
+
+    /* Fix the format of the user input to be exactly what our code expects
+    * Example (Note our code converts userInput into all caps):
+    * SAO PAULO --> Sao Paulo
+    */
+    public static String formatCity(String city) {
+        if(city.contains(" ")) {
+            String tempUserIn = "";
+            for(int i = 0; i < city.length(); i++) {
+                if(city.charAt(i) == ' ') { tempUserIn = tempUserIn + ' '; tempUserIn = tempUserIn + city.charAt(i+1); i = i+2;}
+                if(i == 0 && (city.charAt(0) >= 'A' && city.charAt(0) <= 'Z')) { tempUserIn = tempUserIn + city.charAt(0); i++; if(i > city.length()) {break;}}
+                if(city.charAt(i) >= 'A' && city.charAt(i) <= 'Z') { tempUserIn = tempUserIn + city.toLowerCase().charAt(i);}
+            }
+            return tempUserIn;
+        } else { return city.substring(0,1).toUpperCase() + city.substring(1).toLowerCase(); }
     }
 }
