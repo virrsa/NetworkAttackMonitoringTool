@@ -170,7 +170,7 @@ public class main {
                         break;
                     }
 
-                    formatCity(userIn); // Fixes the format of our city name
+                    userIn = formatCity(userIn); // Fixes the format of our city name
 
                     try {
                         /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
