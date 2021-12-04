@@ -34,6 +34,7 @@ public class Node {
     public Integer getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
+    public int getAlerts() { return this.alerts; }
     public boolean getInfectedStatus() { return this.infected; }
     public boolean getOutbreakStatus() { return this.outbreak; }
     public String getCoordinates() { return this.coordinates; }
@@ -61,7 +62,7 @@ public class Node {
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
-    public void injectVirus(String type, Attack aVirus) {
+    public void injectVirus(String type, Attack aVirus, Graph graph, Map<String,Node> nodes) {
 
         //checks if the node has a firewall. If it does, it does not get infected.
         //instead it keeps track of the attacks attempted against the node.
@@ -116,7 +117,7 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus);} // Injects a virus at all the current nodes connections
+                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus, graph, nodes);} // Injects a virus at all the current nodes connections
                     }
                 }
             }
@@ -126,7 +127,13 @@ public class Node {
                 this.active = false;
                 for(String node : this.links.keySet()) {this.links.get(node).links.remove(this.name);}  // Remove all the cities connected to the current city
                 this.links.keySet().removeAll(this.getLinks().keySet());    // Remove all the cities the current city connects to
+                graph.printGraph(nodes, graph);
             }
         }
     }
+
+    public void createSafeRoute(Node dNode) {
+        System.out.println("Adding safe routes");
+    }
+
 }
