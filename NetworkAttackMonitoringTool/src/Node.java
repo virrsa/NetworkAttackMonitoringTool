@@ -1,7 +1,4 @@
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class Node {
@@ -33,6 +30,8 @@ public class Node {
 
     //getters, may add more as time goes on
     public String getName() { return this.name; }
+    public Integer getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
+    public Integer getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
     public boolean getInfectedStatus() { return this.infected; }
@@ -40,7 +39,25 @@ public class Node {
     public String getCoordinates() { return this.coordinates; }
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
+    public Map.Entry<String, Attack> getSpecificAttacks(String Specific) {
+        for (Map.Entry<String, Attack> virus : this.attacks.entrySet()) {
+            if(virus.getKey().contains(Specific)) {
+                return virus;
+            }
+        }
+        return null;
+    }
 
+    /* Gets the size of all the attacks in a node */
+    public void sortArrays() {
+        /* If a node has no attacks then size is set by default to zero */
+        int redSize = 0, greenSize = 0, blueSize = 0;
+        if(this.attacks.containsKey(" red")) { redSize = this.getTypeSize(" red"); }
+        if(this.attacks.containsKey(" green")) { greenSize = this.getTypeSize(" green"); }
+        if(this.attacks.containsKey(" blue")) { blueSize = this.getTypeSize(" blue"); }
+
+        VirusPrint.printVirusOrder(this, redSize, greenSize, blueSize);
+    }
 
     //class methods
     //injects a virus into a node, and checks if the node generates an alert or triggers an outbreak
@@ -60,7 +77,6 @@ public class Node {
             if (this.attacks.containsKey(type)) {
                 //ignores a virus if the same virus already exists within the list.
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
-
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
 
