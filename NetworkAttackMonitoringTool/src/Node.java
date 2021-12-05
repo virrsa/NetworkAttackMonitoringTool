@@ -1,3 +1,11 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  <student number here>
+ *  Last modified: December 5th, 2021
+ *
+ */
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,16 +36,16 @@ public class Node {
         this.outbreak = false;
     }
 
-    //getters, may add more as time goes on
+    //getters
     public String getName() { return this.name; }
-    public Integer getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
-    public Integer getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
+    public int getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
+    public int getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public boolean getActiveStatus() { return this.active; }
     public boolean getFirewallStatus() { return this.firewall; }
     public int getAlerts() { return this.alerts; }
     public boolean getInfectedStatus() { return this.infected; }
     public boolean getOutbreakStatus() { return this.outbreak; }
-    public String getCoordinates() { return this.coordinates; }
+    //public String getCoordinates() { return this.coordinates; } currently not being used, may be used in GUI implementation
     public Map<String,Node> getLinks() { return this.links; }
     public Map<String, Attack> getAttacks() { return this.attacks; }
     public Map.Entry<String, Attack> getSpecificAttacks(String Specific) {
@@ -95,24 +103,25 @@ public class Node {
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
             //if two or more virus injections of the same type occur within two minutes, it triggers an alert.
-            if (this.attacks.get(type).getDate().size() >= 2 && this.firewall == false) {
+            if (getDateTimeSize(type) >= 2 && this.firewall == false) {
                 //checks if the previous virus has the same date as the new virus
-                if (this.attacks.get(type).getDate().get(this.attacks.get(type).getDate().size()-1).equals(aVirus.getDate().get(0))) {
+                if (this.attacks.get(type).getDate().get(getDateTimeSize(type)-1).equals(aVirus.getDate().get(0))) {
                     String[] parts1 = aVirus.getTime().get(0).split(":");
-                    String[] parts2 = this.attacks.get(type).getTime().get(this.attacks.get(type).getTime().size()-1).split(":");
+                    String[] parts2 = this.attacks.get(type).getTime().get(getDateTimeSize(type)-1).split(":");
                     //checks if the viruses are within two minutes apart from each other
                     if (parts1[0].equals(parts2[0]) && Integer.valueOf(parts1[1]) - Integer.valueOf(parts2[1]) <= 2) {
                         System.out.println("Alert: Node " + this.name + " has been infected by multiple instances of the virus" + type + " on" + aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
+                        //increment number of alerts
                         this.alerts++;
                     }
                 }
             }
             //if 4 or more injections of the same type occur within four minutes, it triggers an outbreak.
-            if (this.attacks.get(type).getDate().size() >= 4 && this.firewall == false) {
+            if (getDateTimeSize(type) >= 4 && this.firewall == false) {
                 //checks if the previous 3 viruses has the same date as the new virus
-                if (this.attacks.get(type).getDate().get(this.attacks.get(type).getDate().size()-3).equals(aVirus.getDate().get(0))) {
+                if (this.attacks.get(type).getDate().get(getDateTimeSize(type)-3).equals(aVirus.getDate().get(0))) {
                     String[] parts1 = aVirus.getTime().get(0).split(":");
-                    String[] parts2 = this.attacks.get(type).getTime().get(this.attacks.get(type).getTime().size()-3).split(":");
+                    String[] parts2 = this.attacks.get(type).getTime().get(getDateTimeSize(type)-3).split(":");
                     //checks if the viruses are within four minutes apart from each other
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");

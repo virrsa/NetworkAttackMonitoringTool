@@ -1,3 +1,30 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  <student number here>
+ *  Last modified: December 5th, 2021
+ *
+ *  This project creates and monitors the status of nodes in real time, given a file with the indicated nodes
+ *  and attacks against the nodes.
+ *  Nodes are stored in an undirected graph and node connections are bi-directional. Attacks are sorted and injected
+ *  in chronological order. Any node with a firewall cannot be attacked and instead keeps a record of the attacks that it
+ *  stops.
+ *  If two viruses or more of the same virus are injected in a node within two minutes, the node will generate an alert.
+ *  If four or more of the same viruses are injected in a node within four minutes, it will cause an outbreak.
+ *  All adjacent nodes will be injected with the same type of virus.
+ *  If a node receives 6 viruses in total of at least two types attacks, the node will become inactive, which removes all
+ *  adjacent links. It can no longer be attacked.
+ *
+ *  Finally, the project provides a tool that you can view statistics of the amount of nodes who were affected by attacks,
+ *  which nodes have generated alerts, caused outbreaks, went inactive, and more. You can also specify a node to look at the
+ *  virus statistics, whether it has a firewall, how many alerts it has generated and whether it is active.
+ *  Lastly, the tool allows you to create a safe route between two nodes. It will find the shortest path between the two
+ *  nodes, granted the nodes in that path have not been infected.
+ *  NOTE: If the source or destination node have been infected, a safe route cannot be created.
+ *
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -10,7 +37,7 @@ public class main {
         Scanner attackScanner = new Scanner(attackInput);
         Scanner graphScanner = new Scanner(graphInput);
 
-        //adds nodes to the hashmap given a Graph.txt file, may be changed later to another data type
+        //adds nodes to the hashmap given a Graph.txt file
         Map<String,Node> nodes = new HashMap<>();
 
         while (graphScanner.hasNext()) {
@@ -91,9 +118,8 @@ public class main {
             }
             attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
         }
-        //graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
 
-        System.out.print("\n");
+        System.out.print("\n"); //output spacing purposes
 
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the Network Attack Monitoring Tool.");
@@ -161,6 +187,7 @@ public class main {
                     }
                 }
             }
+            //displays virus statistics given a node
             else if (userIn.equals("VIRUS")) {
                 while(true) {
                     System.out.println("What node would you like get virus statistics on? (END to exit) ");
@@ -171,8 +198,11 @@ public class main {
                     }
 
                     userIn = formatCity(userIn); // Fixes the format of our city name
-
+                    //check if the node that was entered was valid
                     try {
+                        if (nodes.get(userIn).getFirewallStatus()) {
+                            System.out.println("Node " + userIn + " has a firewall, thus has not been infected. Here are the records of the viruses that it blocked:");
+                        }
                         /* Gets the size of all the attacks if there is no attacks then size is set by default to zero */
                         nodes.get(userIn).sortArrays();
                         if (nodes.get(userIn).getActiveStatus()) {
@@ -189,20 +219,20 @@ public class main {
                     }
                 }
             }
+            //creates safe routes
             else if (userIn.equals("SAFE")) {
-
                 System.out.println("Which source node would you like to use for the safe route?");
                 String sourceInTemp = input.nextLine().toUpperCase();
                 String sourceIn = formatCity(sourceInTemp); // Fixes the format of our city name
                 System.out.println("Which destination node would you like to use for the safe route?");
                 String destInTemp = input.nextLine().toUpperCase();
                 String destIn = formatCity(destInTemp); // Fixes the format of our city name
-
+                //check if the input is a valid node. If not, inform the user
                 try {
 
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
-
+                    //if one or both of the nodes are infected, the safe route cannot be generated
                     if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) { System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");}
                     else { graph.outputShortestDistance(nodes, sourceIn, destIn); }
                 }
@@ -210,6 +240,7 @@ public class main {
                     System.out.println("Please enter a valid node.");
                 }
             }
+            //exits out of the program
             else if (userIn.equals("END") || userIn.equals("EXIT")) {
                 break;
             }
@@ -223,13 +254,18 @@ public class main {
     */
     public static String formatCity(String city) {
         if(city.contains(" ")) {
-            String tempUserIn = "";
-            for(int i = 0; i < city.length(); i++) {
-                if(city.charAt(i) == ' ') { tempUserIn = tempUserIn + ' '; tempUserIn = tempUserIn + city.charAt(i+1); i = i+2;}
-                if(i == 0 && (city.charAt(0) >= 'A' && city.charAt(0) <= 'Z')) { tempUserIn = tempUserIn + city.charAt(0); i++; if(i > city.length()) {break;}}
-                if(city.charAt(i) >= 'A' && city.charAt(i) <= 'Z') { tempUserIn = tempUserIn + city.toLowerCase().charAt(i);}
+            String[] parts = city.split(" ");
+            String fixedCity = "";
+            for (int i = 0; i < parts.length; i++){
+                parts[i] = parts[i].substring(0,1).toUpperCase() + parts[i].substring(1).toLowerCase();
+                //if this is the final word, no need to add a space after it
+                if (i == parts.length - 1) {
+                    fixedCity = fixedCity + parts[i];
+                    break;
+                }
+                fixedCity = fixedCity + parts[i] + " ";
             }
-            return tempUserIn;
+            return fixedCity;
         } else { return city.substring(0,1).toUpperCase() + city.substring(1).toLowerCase(); }
     }
 }

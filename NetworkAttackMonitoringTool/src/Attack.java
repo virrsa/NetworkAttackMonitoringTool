@@ -1,3 +1,11 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  <student number here>
+ *  Last modified: December 5th, 2021
+ *
+ */
 import java.util.ArrayList;
 
 public class Attack {
@@ -17,7 +25,7 @@ public class Attack {
         this.time = new ArrayList<String>(0);
         this.time.add(aTime);
     }
-    // copy constructor
+    //copy constructor
     public Attack(Attack oldAttack){
         this.node = oldAttack.node;
         this.type = oldAttack.type;
@@ -26,8 +34,6 @@ public class Attack {
     }
 
     //getters
-    public String getNode() { return this.node; }
-    public String getType() { return this.type; }
     public ArrayList<String> getDate() { return this.date; }
     public ArrayList<String> getTime() { return this.time; }
 }
