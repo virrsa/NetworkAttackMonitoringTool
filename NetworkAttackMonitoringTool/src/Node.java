@@ -127,13 +127,8 @@ public class Node {
                 this.active = false;
                 for(String node : this.links.keySet()) {this.links.get(node).links.remove(this.name);}  // Remove all the cities connected to the current city
                 this.links.keySet().removeAll(this.getLinks().keySet());    // Remove all the cities the current city connects to
-                graph.printGraph(nodes, graph);
+                graph.printGraph(nodes, graph, true);
             }
         }
     }
-
-    public void createSafeRoute(Node dNode) {
-        System.out.println("Adding safe routes");
-    }
-
 }

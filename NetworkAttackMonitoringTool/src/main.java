@@ -67,7 +67,7 @@ public class main {
         }
 
         Graph graph = new Graph();  // create a graph
-        graph.printGraph(nodes, graph); // Want to see the connections uncomment me then!
+        graph.printGraph(nodes, graph, true); // Want to see the connections uncomment me then!
 
         //injects attacks into nodes given an Attack.txt file.
         for(String i : dateList)    // Loops through our data list
@@ -189,7 +189,6 @@ public class main {
                     }
                 }
             }
-            //TODO: Create safe routes
             else if (userIn.equals("SAFE")) {
 
                 System.out.println("Which source node would you like to use for the safe route?");
@@ -200,16 +199,12 @@ public class main {
                 String destIn = formatCity(destInTemp); // Fixes the format of our city name
 
                 try {
+
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
 
-                    if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) {
-                        System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");
-                    }
-                    else {
-                        System.out.println("Route can be generated");
-                        sNode.createSafeRoute(dNode);
-                    }
+                    if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) { System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");}
+                    else { graph.outputShortestDistance(nodes, sourceIn, destIn); }
                 }
                 catch(Exception e) {
                     System.out.println("Please enter a valid node.");
