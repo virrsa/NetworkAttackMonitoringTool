@@ -1,3 +1,11 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  <student number here>
+ *  Last modified: November 21st, 2021
+ *
+ */
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;

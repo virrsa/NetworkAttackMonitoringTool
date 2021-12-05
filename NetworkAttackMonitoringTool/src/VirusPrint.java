@@ -1,3 +1,11 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  <student number here>
+ *  Last modified: December 3rd, 2021
+ *
+ */
 import java.util.Map;
 
 public class VirusPrint {
