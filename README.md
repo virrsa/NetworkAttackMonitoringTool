@@ -3,6 +3,9 @@ Final term project for Data Structures/NET3004.
 
 This project creates and monitors the status of nodes in real time,
 given a file with the indicated nodes and attacks against the nodes.
+Nodes are stored in an undirected graph and node connections are bi-directional. 
+Attacks are sorted and injected in chronological order. Any node with a firewall 
+cannot be attacked and instead keeps a record of the attacks that it stops.
 
 Information that is contained within a node can be the following:
     
