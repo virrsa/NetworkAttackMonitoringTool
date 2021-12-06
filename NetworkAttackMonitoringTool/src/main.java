@@ -233,8 +233,8 @@ public class main {
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
                     //if one or both of the nodes are infected, the safe route cannot be generated
-                    if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) { System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");}
-                    else { graph.outputShortestDistance(nodes, sourceIn, destIn); }
+                    /*if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) { System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");}
+                    else {*/ graph.outputShortestDistance(nodes, sourceIn, destIn);// }
                 }
                 catch(Exception e) {
                     System.out.println("Please enter a valid node.");
