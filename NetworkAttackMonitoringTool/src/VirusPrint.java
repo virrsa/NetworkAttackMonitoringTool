@@ -2,68 +2,28 @@
  *  Sarah Virr
  *  101146506
  *  Jawad Kadri
- *  <student number here>
- *  Last modified: December 3rd, 2021
+ *  101147056
+ *  Last modified: December 5th, 2021
  *
  */
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 public class VirusPrint {
     /* Print all the attacks in order by the number of attacks */
-    public static void printVirusOrder(Node node, int redSize, int greenSize, int blueSize) {
+    public static void printVirusOrder(Node node, int redSize, int greenSize, int blueSize, int blackSize) {
 
-        if(redSize == blueSize && redSize == greenSize) {
-            // Red, Green, Blue
-            getRedAttackVirus(node,redSize);
-            getGreenAttackVirus(node,greenSize);
-            getBlueAttackVirus(node,blueSize);
+        Integer[] colourArray = {redSize, greenSize, blueSize, blackSize};  // place all the sizes into an array
+        Arrays.sort(colourArray, Collections.reverseOrder());               // sort the array from greatest to least
+
+        boolean checkGreen = false, checkRed = false, checkBlue = false, checkBlack = false;    // default nothing has been checked
+        for(Integer i : colourArray) {  // loop through the entire array
+            if(i == greenSize && !checkGreen) { getGreenAttackVirus(node, greenSize); checkGreen = true; }  // if green is the biggest print it and set the check to true
+            else if(i == redSize && !checkRed) { getRedAttackVirus(node, redSize); checkRed = true; }       // if red is the biggest print it and set the check to true
+            else if(i == blueSize && !checkBlue) { getBlueAttackVirus(node, blueSize); checkBlue = true; }  // if blue is the biggest print it and set the check to true
+            else if(i == blackSize && !checkBlack) { getBlackAttackVirus(node, blackSize); checkBlack = true; } // if black is the biggest print it and set the check to true
         }
-
-        if(redSize > greenSize && redSize > blueSize) {
-            // Red is the largest
-            getRedAttackVirus(node,redSize);
-
-            if(greenSize > blueSize) {
-                // Green is median and Blue is smallest
-                getGreenAttackVirus(node,greenSize);
-                getBlueAttackVirus(node,blueSize);
-            } else {
-                // Blue is median and Green is smallest
-                getBlueAttackVirus(node,blueSize);
-                getGreenAttackVirus(node,greenSize);
-            }
-        }
-
-        if(greenSize > redSize && greenSize > blueSize) {
-            // Green is the largest
-            getGreenAttackVirus(node,greenSize);
-
-            if(redSize > blueSize) {
-                // Red is median and Blue is smallest
-                getRedAttackVirus(node,redSize);
-                getBlueAttackVirus(node,blueSize);
-            } else {
-                // Blue is median and Green is Red smallest
-                getBlueAttackVirus(node,blueSize);
-                getRedAttackVirus(node,redSize);
-            }
-        }
-
-        if(blueSize > greenSize && blueSize > redSize) {
-            // Blue is the largest
-            getBlueAttackVirus(node,blueSize);
-
-            if(redSize > greenSize) {
-                // Red is median and Green is smallest
-                getRedAttackVirus(node,redSize);
-                getGreenAttackVirus(node,greenSize);
-            } else {
-                // Green is median and Red is smallest
-                getGreenAttackVirus(node,greenSize);
-                getRedAttackVirus(node,redSize);
-            }
-        }
-
     }
 
     public static boolean getRedAttackVirus(Node node, int redSize) {
@@ -86,6 +46,14 @@ public class VirusPrint {
         String type = " green";
         if(greenSize == 0) {return false;}      // If there is no green attack then return false
         Map.Entry<String, Attack> virus = node.getSpecificAttacks(" green");   // Go and grab all the green attacks
+        outputToConsole(node, virus, type);  // Output it to the console
+        return true;
+    }
+
+    public static boolean getBlackAttackVirus(Node node, int blueSize) {
+        String type = " black";
+        if(blueSize == 0) {return false;}       // If there is no black attack then return false
+        Map.Entry<String, Attack> virus = node.getSpecificAttacks(" black");     // Go and grab all the black attacks
         outputToConsole(node, virus, type);  // Output it to the console
         return true;
     }

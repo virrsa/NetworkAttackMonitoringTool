@@ -2,7 +2,7 @@
  *  Sarah Virr
  *  101146506
  *  Jawad Kadri
- *  <student number here>
+ *  101147056
  *  Last modified: December 5th, 2021
  *
  *  This project creates and monitors the status of nodes in real time, given a file with the indicated nodes

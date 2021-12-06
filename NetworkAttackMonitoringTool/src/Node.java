@@ -2,7 +2,7 @@
  *  Sarah Virr
  *  101146506
  *  Jawad Kadri
- *  <student number here>
+ *  101147056
  *  Last modified: December 5th, 2021
  *
  */
@@ -60,12 +60,13 @@ public class Node {
     /* Gets the size of all the attacks in a node */
     public void sortArrays() {
         /* If a node has no attacks then size is set by default to zero */
-        int redSize = 0, greenSize = 0, blueSize = 0;
+        int redSize = 0, greenSize = 0, blueSize = 0, blackSize = 0;
         if(this.attacks.containsKey(" red")) { redSize = this.getTypeSize(" red"); }
         if(this.attacks.containsKey(" green")) { greenSize = this.getTypeSize(" green"); }
         if(this.attacks.containsKey(" blue")) { blueSize = this.getTypeSize(" blue"); }
+        if(this.attacks.containsKey(" black")) { blackSize = this.getTypeSize(" black"); }
 
-        VirusPrint.printVirusOrder(this, redSize, greenSize, blueSize);
+        VirusPrint.printVirusOrder(this, redSize, greenSize, blueSize, blackSize);
     }
 
     //class methods

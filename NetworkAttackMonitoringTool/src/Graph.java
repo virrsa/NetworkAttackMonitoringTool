@@ -2,16 +2,18 @@
  *  Sarah Virr
  *  101146506
  *  Jawad Kadri
- *  <student number here>
+ *  101147056
  *  Last modified: December 4th, 2021
  *
  */
 
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 public class Graph {
 
     private Map<String, List<String> > map = new HashMap<>();   // HashMap that contains the edges the graph
+    private boolean foundSafepath;  // Boolean that tells if a safe path could be found
 
     /*
      * Adds a new vertex to the graph
@@ -113,6 +115,7 @@ public class Graph {
      * Connects a vertex(source) to its connecting node in a digit form
      */
     public static void addNumEdge(ArrayList<ArrayList<Integer>> numberGraph, int source, int destination) { numberGraph.get(source).add(destination); }
+    public static void addNumEdge(ArrayList<Integer>[] numberAllGraph, int source, int destination) { numberAllGraph[source].add(destination); }
 
     /*
      * Prints the shortest distance between the source vertex and the destination vertex
@@ -133,8 +136,11 @@ public class Graph {
 
         int vertices = countVertices();     // get and store the number of vertices in the graph
         ArrayList<ArrayList<Integer>> numberGraph = new ArrayList<ArrayList<Integer>>(vertices);    // Create a graph to store the number version
-        for (int i = 0; i < vertices; i++) { numberGraph.add(new ArrayList<Integer>()); }   // Add an array of integers into our graph
-                                                                                            // this is for our node connections
+        ArrayList<Integer>[] numberAllGraph = new ArrayList[vertices];          // Create a graph (for printing all possible routes)
+
+        // Add an array of integers into our graph this is for our node connections (Initialize)
+        for (int i = 0; i < vertices; i++) { numberGraph.add(new ArrayList<Integer>()); numberAllGraph[i] = new ArrayList<>(); }
+
         for(String node : nodes.keySet())   // loop through all the cities (nodes)
         {
             for(String link : nodes.get(node).getLinks().keySet())  // loops through all the city connections (links)
@@ -148,6 +154,7 @@ public class Graph {
                         int linkNum = nodesToNum.get(cityName); // get the link that connects to our source node (our destination node)
                         //System.out.println(node +": " +nodesNum +" connects to " +num +": " +linkNum);
                         addNumEdge(numberGraph, nodesNum, linkNum); // now add them to our number graph.
+                        addNumEdge(numberAllGraph, nodesNum, linkNum);  // now add them to our all number graph
                     }                                               // Example:
                 }                                                   // Vancouver(0) --> Tokyo(2)
             }                                                       // <0> --> <index 0> --> 2
@@ -163,11 +170,16 @@ public class Graph {
         int nodePath[] = new int[vertices];     // array of all the previous found nodes
         int distance[] = new int[vertices];     // the distance of the stored node from the source
 
-        /* Attempts to run a BFS Algorithm but if it fails then we should let the user know and leave */
-        if (BreadthFirstSearch(numberGraph, numSource, numDest, vertices, nodePath, distance) == false) {
-            System.out.println("Given source: " +sourceIn +" and destination: " +destIn +" a safe path could not be found");
+        /* Before we find the fastest route we need to show all the possible paths */
+        System.out.print("\nAll possible routes from " +sourceIn +" to " +destIn +" are:\n");
+        findAllPaths(nodes, nodesToNum, numberAllGraph, numSource, numDest, vertices);
+        if(!foundSafepath) {
+            System.out.println("No safe path could not be found!\n");
             return;
         }
+
+         /* Attempts to run a BFS Algorithm  */
+        BreadthFirstSearch(nodes, nodesToNum, numberGraph, numSource, numDest, vertices, nodePath, distance);
 
         /* Otherwise, lets go print it :D */
         LinkedList<Integer> path = new LinkedList<Integer>();   // Store a linked list of the path that was taken
@@ -179,12 +191,12 @@ public class Graph {
         }
 
         // Print the distance
-        System.out.println("\nThe path distance is " + distance[numDest] +" hop(s)!");
+        System.out.println("\n\nThe shortest safest path distance is " + distance[numDest] +" hop(s)!");
 
         // Print path
         int index = 1;      // Sets an index so then the " --> " character doesn't print after the last edge is printed
         for (int i = path.size() - 1; i >= 0; i--) {    // loop through our path array
-            for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {   // loop through our numberr hashmap
+            for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {   // loop through our number hashmap
                 if(numMap.getValue() == path.get(i)) {  // does our path number value equal to our location in our number map?
                     System.out.print(numMap.getKey());  // Yes! That means we know the string value of that number print it!
                     if(path.size() != index) { System.out.print(" --> ");}  // If we haven't printed the last edge then print the " --> " character
@@ -194,8 +206,69 @@ public class Graph {
         }
         System.out.println("\n"); // Formatting
     }
+
+    public void findAllPaths(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<Integer>[] numberGraph, int numSource, int numDest, int numVertices)
+    {
+        ArrayList<Integer> pathList = new ArrayList<>();    // A list that contains a possible path
+        boolean[] visited = new boolean[numVertices];     // A boolean array that knows if a path has been visited
+
+        pathList.add(numSource);    // add the number version of the source node
+                                    // to the array
+        /* We can use recursion to print all the possible paths :D */
+        printAllPathsRecursive(nodes, nodesToNum, numberGraph, pathList, numSource, numDest, visited);
+    }
+
+    private void printAllPathsRecursive(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<Integer>[] numberGraph, List<Integer> basicPath, Integer numSource, Integer numDest, boolean[] visited)
+    {
+        /* The following 2 if statements/return is for when we want to print the results */
+        if (numSource.equals(numDest)) {   // if we've reached our destination lets print the route!
+            int index;  // Sets an index so then the " --> " character doesn't print after the last edge is printed
+            boolean infectedPath = false;   // by default this path is assumed to be safe
+            for (int i = 0; i < basicPath.size(); i++) {    // let us loop through our path
+                for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {   // let's convert our number variant to its corresponding string
+                    if(numMap.getValue() == basicPath.get(i)) { // if we found the corresponding string
+                        for (Map.Entry<String, Node> nodeEntry : nodes.entrySet()) { // then lets find our string in our nodes hashmap
+                            if(nodeEntry.getKey().equals(numMap.getKey())) {    // if we found the correct city
+                                if(nodeEntry.getValue().getInfectedStatus() == true) {  // let's make sure this city isn't infected
+                                    infectedPath = true;    // oh, no it is! we shouldn't print this path then
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(!infectedPath) { // if our path is safe
+                foundSafepath = true;
+                index = 1;  // Sets an index so then the " --> " character doesn't print after the last edge is printed
+                for (int i = 0; i < basicPath.size(); i++) {    // loop through our path
+                    for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {    // loop through our number hashmap (convert)
+                        if (numMap.getValue() == basicPath.get(i)) {    // does our path number value equal to our location in our number map?
+                            System.out.print(numMap.getKey()); // Yes! That means we know the string value of that number print it!
+                            if (basicPath.size() != index) { System.out.print(" --> "); }// If we haven't printed the last edge
+                            index++; // increment our index                                                                 // then print the " --> " character
+                        }
+                    }
+                }
+            }
+            return;   // we are done we can leave
+        }
+
+        visited[numSource] = true;  // this is the start so its obviously has been visited
+
+        for (Integer numNode : numberGraph[numSource]) {    // loop through all of our vertices
+            if (!visited[numNode]) {    // if we haven't visited this poor node
+                basicPath.add(numNode); // then lets add it to our path!
+                /* let's restart but now with our newly added node */
+                printAllPathsRecursive(nodes, nodesToNum, numberGraph, basicPath, numNode, numDest, visited);
+                basicPath.remove(numNode);  // remove the current node
+            }
+        }
+        visited[numSource] = false; // We failed to find the node
+    }
+
     /* Searches to find if a pathway is safe. This is private because this is a local function ONLY! */
-    private static boolean BreadthFirstSearch(ArrayList<ArrayList<Integer>> numberGraph, int numSource, int numDest, int numVertices, int numPath[], int distance[]) {
+    private static boolean BreadthFirstSearch(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<ArrayList<Integer>> numberGraph, int numSource, int numDest, int numVertices, int numPath[], int distance[]) {
 
         LinkedList<Integer> vertexQ = new LinkedList<Integer>();  // A queue which contains a list of all the adjacent vertex
         boolean visited[] = new boolean[numVertices];   // A boolean array that knows if a vertex is reachable
@@ -213,6 +286,7 @@ public class Graph {
         while (!vertexQ.isEmpty()) {    // while the queue has a node to search for
             int nodeIndex = vertexQ.remove();   // remove the node from the queue
             for (int i = 0; i < numberGraph.get(nodeIndex).size(); i++) {   // loop through the entire graph
+
                 if (visited[numberGraph.get(nodeIndex).get(i)] == false) {  // has the connected node been visited?
                     visited[numberGraph.get(nodeIndex).get(i)] = true;      // no? Well change it cause now we have :D
                     distance[numberGraph.get(nodeIndex).get(i)] = distance[nodeIndex] + 1;  // Increment the distance at the specified node
