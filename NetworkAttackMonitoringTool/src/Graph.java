@@ -13,6 +13,7 @@ import java.util.stream.StreamSupport;
 public class Graph {
 
     private Map<String, List<String> > map = new HashMap<>();   // HashMap that contains the edges the graph
+    private boolean foundSafepath;  // Boolean that tells if a safe path could be found
 
     /*
      * Adds a new vertex to the graph
@@ -169,22 +170,16 @@ public class Graph {
         int nodePath[] = new int[vertices];     // array of all the previous found nodes
         int distance[] = new int[vertices];     // the distance of the stored node from the source
 
-
         /* Before we find the fastest route we need to show all the possible paths */
-        System.out.print("\nAll possible routes from " +sourceIn +" to " +destIn +" are:");
-        findAllPaths(nodes, nodesToNum, numberAllGraph, numSource, numDest, vertices); // lets go
-
-        /*
-            If findAllPaths() returns a boolean where it couldn't find a single path then we can force the program
-            to not bother and do a BFS because there is no path. However, if findAllPaths() does find a path then we can just
-            let BFS run because it will always find that path!
-         */
-
-         /* Attempts to run a BFS Algorithm but if it fails then we should let the user know and leave */
-        if (BreadthFirstSearch(nodes, nodesToNum, numberGraph, numSource, numDest, vertices, nodePath, distance) == false) {
-            System.out.println("\nGiven source: " +sourceIn +" and destination: " +destIn +" a safe path could not be found!\n");
+        System.out.print("\nAll possible routes from " +sourceIn +" to " +destIn +" are:\n");
+        findAllPaths(nodes, nodesToNum, numberAllGraph, numSource, numDest, vertices);
+        if(!foundSafepath) {
+            System.out.println("No safe path could not be found!\n");
             return;
         }
+
+         /* Attempts to run a BFS Algorithm  */
+        BreadthFirstSearch(nodes, nodesToNum, numberGraph, numSource, numDest, vertices, nodePath, distance);
 
         /* Otherwise, lets go print it :D */
         LinkedList<Integer> path = new LinkedList<Integer>();   // Store a linked list of the path that was taken
@@ -196,7 +191,7 @@ public class Graph {
         }
 
         // Print the distance
-        System.out.println("\n\nThe safest path distance is " + distance[numDest] +" hop(s)!");
+        System.out.println("\n\nThe shortest safest path distance is " + distance[numDest] +" hop(s)!");
 
         // Print path
         int index = 1;      // Sets an index so then the " --> " character doesn't print after the last edge is printed
@@ -216,7 +211,6 @@ public class Graph {
     {
         ArrayList<Integer> pathList = new ArrayList<>();    // A list that contains a possible path
         boolean[] visited = new boolean[numVertices];     // A boolean array that knows if a path has been visited
-        boolean foundSafePath = false;     // by default there is not safe path
 
         pathList.add(numSource);    // add the number version of the source node
                                     // to the array
@@ -245,7 +239,7 @@ public class Graph {
             }
 
             if(!infectedPath) { // if our path is safe
-                System.out.print("\n\tSafe: ");
+                foundSafepath = true;
                 index = 1;  // Sets an index so then the " --> " character doesn't print after the last edge is printed
                 for (int i = 0; i < basicPath.size(); i++) {    // loop through our path
                     for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {    // loop through our number hashmap (convert)
@@ -256,20 +250,8 @@ public class Graph {
                         }
                     }
                 }
-            } else {    // if our path is not safe
-                System.out.print("\nNot Safe: ");
-                index = 1;  // Sets an index so then the " --> " character doesn't print after the last edge is printed
-                for (int i = 0; i < basicPath.size(); i++) {    // loop through our path
-                    for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {    // loop through our number hashmap (convert)
-                        if (numMap.getValue() == basicPath.get(i)) {    // does our path number value equal to our location in our number map?
-                            System.out.print(numMap.getKey()); // Yes! That means we know the string value of that number print it!
-                            if (basicPath.size() != index) { System.out.print(" --> "); } // If we haven't printed the last edge
-                            index++; // increment our index                                                                 // then print the " --> " character
-                        }
-                    }
-                }
             }
-            return; // we are done we can leave
+            return;   // we are done we can leave
         }
 
         visited[numSource] = true;  // this is the start so its obviously has been visited
@@ -306,21 +288,11 @@ public class Graph {
             for (int i = 0; i < numberGraph.get(nodeIndex).size(); i++) {   // loop through the entire graph
 
                 if (visited[numberGraph.get(nodeIndex).get(i)] == false) {  // has the connected node been visited?
-                    // is this node a virus?
-                    for (Map.Entry<String, Integer> numMap : nodesToNum.entrySet()) {
-                        if(numMap.getValue() == numberGraph.get(nodeIndex).get(i)) {
-                            for (Map.Entry<String, Node> nodeEntry : nodes.entrySet()) {
-                                if(nodeEntry.getKey().equals(numMap.getKey())) {
-                                    if (nodeEntry.getValue().getInfectedStatus() == false) {
-                                        visited[numberGraph.get(nodeIndex).get(i)] = true;      // no? Well change it cause now we have :D
-                                        distance[numberGraph.get(nodeIndex).get(i)] = distance[nodeIndex] + 1;  // Increment the distance at the specified node
-                                        numPath[numberGraph.get(nodeIndex).get(i)] = nodeIndex;      // the connected node has found a safe passage to the previous one
-                                        vertexQ.add(numberGraph.get(nodeIndex).get(i));      // we will now restart but at the newly safe node
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    visited[numberGraph.get(nodeIndex).get(i)] = true;      // no? Well change it cause now we have :D
+                    distance[numberGraph.get(nodeIndex).get(i)] = distance[nodeIndex] + 1;  // Increment the distance at the specified node
+                    numPath[numberGraph.get(nodeIndex).get(i)] = nodeIndex;      // the connected node has found a safe passage to the previous one
+                    vertexQ.add(numberGraph.get(nodeIndex).get(i));      // we will now restart but at the newly safe node
+
                     if (numberGraph.get(nodeIndex).get(i) == numDest) { return true; } // if our newly found safe node is the destination then we are done!
                 }
             }
