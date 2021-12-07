@@ -124,9 +124,11 @@ public class Graph {
 
         this.updateGraph(nodes, this);  // make sure our graph is up-to-date :)
 
+        StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); // timer
         Map<String, Integer> nodesToNum = new HashMap<>();    // a hashmap that will store our city name and its corresponding number value
                                                               // Ex. < Vancouver, 0 >
         int number = 0; // value to be stored with corresponding city
+        timer.start();
         for (String sourceNode : map.keySet())  // loop through the entire graph
         {
             nodesToNum.put(sourceNode, number); // put the city name + corresponding number into hashmap
@@ -175,6 +177,8 @@ public class Graph {
         findAllPaths(nodes, nodesToNum, numberAllGraph, numSource, numDest, vertices);
         if(!foundSafepath) {
             System.out.println("No safe path could not be found!\n");
+            timer.stop();
+            System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
             return;
         }
 
@@ -204,7 +208,9 @@ public class Graph {
                 }
             }
         }
+        timer.stop();
         System.out.println("\n"); // Formatting
+        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
     }
 
     public void findAllPaths(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<Integer>[] numberGraph, int numSource, int numDest, int numVertices)

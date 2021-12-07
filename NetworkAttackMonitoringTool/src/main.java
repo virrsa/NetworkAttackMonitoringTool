@@ -197,9 +197,13 @@ public class main {
                         break;
                     }
 
+                    StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); //timer
+
                     userIn = formatCity(userIn); // Fixes the format of our city name
+
                     //check if the node that was entered was valid
                     try {
+                        timer.start();
                         if (nodes.get(userIn).getFirewallStatus()) {
                             System.out.println("Node " + userIn + " has a firewall, thus has not been infected. Here are the records of the viruses that it blocked:");
                         }
@@ -211,7 +215,8 @@ public class main {
                         else {
                             System.out.println("Node " + userIn + " has generated " + nodes.get(userIn).getAlerts() + " alerts and is currently inactive.");
                         }
-
+                        timer.stop();
+                        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
                     }
                     //if the input is a node that doesn't exist, catch the exception and ask the node once again
                     catch(Exception e) {
