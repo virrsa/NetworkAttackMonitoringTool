@@ -3,14 +3,14 @@
  *  101146506
  *  Jawad Kadri
  *  101147056
- *  Last modified: December 5th, 2021
+ *  Last modified: December 10th, 2021
  *
  */
 import java.util.HashMap;
 import java.util.Map;
 
 public class Node {
-    //class members
+    // class members
     private String name;
     private String coordinates;
     private boolean active;
@@ -23,7 +23,7 @@ public class Node {
     private int alerts;
     private boolean outbreak;
 
-    //constructor
+    // constructor
     public Node(String nName, String nCoordinates, boolean nFirewall) {
         this.name = nName;
         this.coordinates = nCoordinates;
@@ -36,7 +36,7 @@ public class Node {
         this.outbreak = false;
     }
 
-    //getters
+    // getters
     public String getName() { return this.name; }
     public int getTypeSize(String type) { return this.attacks.get(type).getDate().size(); }
     public int getDateTimeSize(String type) { return this.attacks.get(type).getDate().size(); }
@@ -74,10 +74,8 @@ public class Node {
     public void injectVirus(String type, Attack aVirus, Graph graph, Map<String,Node> nodes) {
 
         //checks if the node has a firewall. If it does, it does not get infected.
-        //instead it keeps track of the attacks attempted against the node.
-        if (!this.firewall) {
-            this.infected = true;
-        }
+        //instead, it keeps track of the attacks attempted against the node.
+        if (!this.firewall) this.infected = true;
 
         //if the node is active, inject the virus.
         if (this.active) {
@@ -89,36 +87,30 @@ public class Node {
                 if(this.attacks.get(type).getDate().contains(aVirus.getDate().get(0)) && this.attacks.get(type).getTime().contains(aVirus.getTime().get(0))) { return; }
                 this.attacks.get(type).getDate().add(aVirus.getDate().get(0));
                 this.attacks.get(type).getTime().add(aVirus.getTime().get(0));
-
-                //increments number of attacks
-                numAttacks++;
             }
             //if the virus hasn't infected the node, add the virus itself to the attack list.
             else {
                 Attack newVirus = new Attack(aVirus);   // create the same attack at a new location in memory
                 this.attacks.put(type, newVirus); // Store our location and virus into the nodes attack map
-
-                //increments number of attacks
-                numAttacks++;
             }
+            numAttacks++;   //increments number of attacks
 
             //check for viruses that can cause alerts or outbreaks, or shut down the node if it has 6 viruses
             //if two or more virus injections of the same type occur within two minutes, it triggers an alert.
-            if (getDateTimeSize(type) >= 2 && this.firewall == false) {
+            if (getDateTimeSize(type) >= 2 && !this.firewall)
                 //checks if the previous virus has the same date as the new virus
-                if (this.attacks.get(type).getDate().get(getDateTimeSize(type)-1).equals(aVirus.getDate().get(0))) {
+                if (this.attacks.get(type).getDate().get(getDateTimeSize(type) - 1).equals(aVirus.getDate().get(0))) {
                     String[] parts1 = aVirus.getTime().get(0).split(":");
-                    String[] parts2 = this.attacks.get(type).getTime().get(getDateTimeSize(type)-1).split(":");
+                    String[] parts2 = this.attacks.get(type).getTime().get(getDateTimeSize(type) - 1).split(":");
                     //checks if the viruses are within two minutes apart from each other
-                    if (parts1[0].equals(parts2[0]) && Integer.valueOf(parts1[1]) - Integer.valueOf(parts2[1]) <= 2) {
+                    if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 2) {
                         System.out.println("Alert: Node " + this.name + " has been infected by multiple instances of the virus" + type + " on" + aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         //increment number of alerts
                         this.alerts++;
                     }
                 }
-            }
             //if 4 or more injections of the same type occur within four minutes, it triggers an outbreak.
-            if (getDateTimeSize(type) >= 4 && this.firewall == false) {
+            if (getDateTimeSize(type) >= 4 && !this.firewall) {
                 //checks if the previous 3 viruses has the same date as the new virus
                 if (this.attacks.get(type).getDate().get(getDateTimeSize(type)-3).equals(aVirus.getDate().get(0))) {
                     String[] parts1 = aVirus.getTime().get(0).split(":");
@@ -127,12 +119,13 @@ public class Node {
                     if (parts1[0].equals(parts2[0]) && Integer.parseInt(parts1[1]) - Integer.parseInt(parts2[1]) <= 4) {
                         System.out.println("Outbreak triggered at node " + this.name + " on" +aVirus.getDate().get(0) + " at" + aVirus.getTime().get(0) + ".");
                         this.outbreak = true;
-                        for(String node: this.links.keySet()) {this.links.get(node).injectVirus(type, aVirus, graph, nodes);} // Injects a virus at all the current nodes connections
+                        for(String node: this.links.keySet()) { this.links.get(node).injectVirus(type, aVirus, graph, nodes); } // Injects a virus at all the current nodes connections
                     }
                 }
             }
+
             //if there are a total of 6 viruses or more and at least 2 types of viruses, the node is put offline.
-            else if (this.attacks.size() >= 2 && numAttacks >= 6 && this.firewall == false) {
+            else if (this.attacks.size() >= 2 && numAttacks >= 6 && !this.firewall) {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
                 StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); //timer
@@ -143,6 +136,7 @@ public class Node {
                 graph.printGraph(nodes, graph, true);
                 timer.stop();
                 System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
+                timer.reset();
             }
         }
     }

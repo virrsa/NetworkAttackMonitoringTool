@@ -3,7 +3,7 @@
  *  101146506
  *  Jawad Kadri
  *  101147056
- *  Last modified: December 5th, 2021
+ *  Last modified: December 10th, 2021
  *
  *  This project creates and monitors the status of nodes in real time, given a file with the indicated nodes
  *  and attacks against the nodes.
@@ -82,7 +82,7 @@ public class main {
         }
 
         /* Sort the dates in order */
-        Collections.sort(dateList, new CompareDates());
+        dateList.sort(new CompareDates());
 
         /* We will delete elements in the list but want to keep the original list */
         ArrayList<String> attackfileClone = new ArrayList<String>(attackfile.size());   // Create clone array
@@ -209,6 +209,7 @@ public class main {
                         }
                         timer.stop();   // Stop timer
                         System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
+                        timer.reset();
                     }
                     /* If the input is a node that doesn't exist, catch the exception and ask the node once again */
                     catch(Exception e) {
@@ -234,35 +235,33 @@ public class main {
                 }
                 catch(Exception e) {
                     /* Only tell the user about an invalid entry if they didn't want to leave */
-                    if(sourceIn.equals("Exit") || sourceIn.equals("End") || destIn.equals("Exit") || destIn.equals("End")) { continue; } else { System.out.println("Please enter a valid node."); }
+                    if(sourceIn.equals("Exit") || sourceIn.equals("End") || destIn.equals("Exit") || destIn.equals("End")) {} else { System.out.println("Please enter a valid node."); }
                 }
             }
             /* Exits out of the program */
-            else if (userIn.equals("END") || userIn.equals("EXIT")) {
-                break;
-            }
+            else if (userIn.equals("END") || userIn.equals("EXIT")) break;
         }
         System.out.println("Exiting out of Network Attack Monitoring Tool.");
     }
 
     /* Fix the format of the user input to be exactly what our code expects
     * Example (Note our code converts userInput into all caps):
-    * SAO PAULO --> Sao Paulo
+    * SAO PAULO --> Sao Paulo | VANCOUVER --> Vancouver
     */
     public static String formatCity(String city) {
         if(city.contains(" ")) {
             String[] parts = city.split(" ");
-            String fixedCity = "";
+            StringBuilder fixedCity = new StringBuilder();
             for (int i = 0; i < parts.length; i++){
                 parts[i] = parts[i].substring(0,1).toUpperCase() + parts[i].substring(1).toLowerCase();
                 //if this is the final word, no need to add a space after it
                 if (i == parts.length - 1) {
-                    fixedCity = fixedCity + parts[i];
+                    fixedCity.append(parts[i]);
                     break;
                 }
-                fixedCity = fixedCity + parts[i] + " ";
+                fixedCity.append(parts[i]).append(" ");
             }
-            return fixedCity;
+            return fixedCity.toString();
         } else { return city.substring(0,1).toUpperCase() + city.substring(1).toLowerCase(); }
     }
 }

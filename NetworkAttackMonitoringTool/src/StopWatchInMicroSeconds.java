@@ -1,3 +1,11 @@
+/**
+ *  Sarah Virr
+ *  101146506
+ *  Jawad Kadri
+ *  101147056
+ *  Last modified: December 5th, 2021
+ *
+ */
 
 public class StopWatchInMicroSeconds {
 
