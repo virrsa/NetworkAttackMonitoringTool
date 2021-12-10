@@ -97,3 +97,5 @@ to the least attacks of a virus type.
 
 StopWatchInMicroSeconds.java: This class is a class provided by a tutorial in NET3004, which 
 provides a timer for the code.
+
+BoxPrint.java: Formats outputs for the Network Attack Monitoring Tool.
