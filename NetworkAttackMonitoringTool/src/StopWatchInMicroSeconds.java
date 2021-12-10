@@ -31,6 +31,4 @@ public class StopWatchInMicroSeconds {
         }
         else return elapsedTime;
     }
-
-
 }

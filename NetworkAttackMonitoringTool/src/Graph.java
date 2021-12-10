@@ -50,7 +50,7 @@ public class Graph {
     /*
      * Returns true/false if the graph contains a vertex at the given location
      */
-    public boolean containsVertex(String vertexLocation) { if (map.containsKey(vertexLocation)) { return true; } else { return false; } }
+    public boolean containsVertex(String vertexLocation) { return map.containsKey(vertexLocation); }
 
     /*
      * Check if a graph has an edge or not
@@ -66,7 +66,6 @@ public class Graph {
      */
     public void updateGraph(Map<String,Node> nodes, Graph graph)
     {
-        int numberForm = 0;
         for(String node : nodes.keySet())
         {
             graph.addVertex(node);
@@ -87,7 +86,7 @@ public class Graph {
         System.out.print("\n");   // make sure we start after a new line
         for (String sourceNode : map.keySet())  // loop through all vertex's
         {
-            System.out.print(sourceNode.toString() + ": "); // Prints the current vertex (node)
+            System.out.print(sourceNode + ": "); // Prints the current vertex (node)
 
             if(sourceNode.length() < 15)    // This is set up so all the vertexes are aligned
             {
@@ -99,7 +98,7 @@ public class Graph {
             if(map.get(sourceNode).isEmpty()) { System.out.print("none" + " "); }   // if the vertex has no edges then print accordingly
             int index = 1;  // Sets an index so then the " | " character doesn't print after the last edge is printed
             for (String connectedTo : map.get(sourceNode)) {    // loop through all a nodes connected node
-                System.out.print(connectedTo.toString() + " "); // Prints the connected node
+                System.out.print(connectedTo + " "); // Prints the connected node
                 if (map.get(sourceNode).size() != index) {  // If we haven't printed the last edge then print the " | " character
                     System.out.print("| "); // Print the pipe character
                 }
@@ -128,7 +127,7 @@ public class Graph {
         Map<String, Integer> nodesToNum = new HashMap<>();    // a hashmap that will store our city name and its corresponding number value
                                                               // Ex. < Vancouver, 0 >
         int number = 0; // value to be stored with corresponding city
-        timer.start();
+        timer.start();  // Stat timer
         for (String sourceNode : map.keySet())  // loop through the entire graph
         {
             nodesToNum.put(sourceNode, number); // put the city name + corresponding number into hashmap
@@ -178,7 +177,7 @@ public class Graph {
         if(!foundSafepath) {
             System.out.println("No safe path could not be found!\n");
             timer.stop();
-            System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
+            System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
             return;
         }
 
@@ -208,9 +207,9 @@ public class Graph {
                 }
             }
         }
-        timer.stop();
+        timer.stop();   // Stop the timer
         System.out.println("\n"); // Formatting
-        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
+        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
     }
 
     public void findAllPaths(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<Integer>[] numberGraph, int numSource, int numDest, int numVertices)

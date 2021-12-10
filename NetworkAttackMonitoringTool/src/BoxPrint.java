@@ -11,35 +11,27 @@ public class BoxPrint
     public static void welcomeMsg()
     {
         String welcome = ("  Welcome to the Network Attack Monitoring Tool.");
-        int n = welcome.length();
 
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the top of the box */
+        for (int i = 0; i < welcome.length() + 7; i++) { System.out.print("-"); }
         System.out.println();
+
         System.out.print("! " + welcome + "    !\n");
 
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the bottom of the box */
+        for (int i = 0; i < welcome.length() + 7; i++) { System.out.print("-"); }
         System.out.print("\n");
     }
     public static void commandList()
-    { //statistics, virus statistics or create a safe route? STAT/VIRUS/SAFE/END (Statistics/Viruses/Safe Routes
+    {
         String command = ("Command Entry  -   Full Name");
         String CMD1     =("    STAT       -   Statistics");
         String CMD2     =("    VIRUS      -   Viruses");
         String CMD3     =("    SAFE       -   Safe Routes");
         String end      =("    END        -   END");
 
-        int n = CMD3.length();  // Largest command entry
-
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the top of the box */
+        for (int i = 0; i < CMD3.length() + 7; i++) { System.out.print("-"); }
         System.out.println();
 
         System.out.print("-+ " + command);
@@ -62,17 +54,14 @@ public class BoxPrint
         System.out.format("%10s", "");
         System.out.print("<-\n");
 
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the bottom of the box */
+        for (int i = 0; i < CMD3.length() + 7; i++) { System.out.print("-"); }
         System.out.println("\nPlease enter a command: ");
     }
 
 
     public static void stat()
-    { //System.out.println("Enter INF/FIR/FIA/OUT/INA/END (Nodes Infected/Nodes with Firewall/Firewalls Attacked/Nodes with outbreaks/Inactive Nodes):");
-
+    {
         String command = ("Command Entry  -   Full Name");
         String CMD1     =("    INF        -   Nodes Infected");
         String CMD2     =("    FIR        -   Nodes with Firewall");
@@ -81,12 +70,8 @@ public class BoxPrint
         String CMD5     =("    INA        -   Inactive Nodes");
         String end      =("    END        -   END");
 
-        int n = CMD4.length();  // Largest command entry
-
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the top of the box */
+        for (int i = 0; i < CMD4.length() + 7; i++) { System.out.print("-"); }
         System.out.println();
 
         System.out.print("-+ " + command);
@@ -117,10 +102,8 @@ public class BoxPrint
         System.out.format("%19s", "");
         System.out.print("<-\n");
 
-        for (int i = 0; i < n + 7; i++)
-        {
-            System.out.print("-");
-        }
+        /* Print dashes(-) for the bottom of the box */
+        for (int i = 0; i < CMD4.length() + 7; i++) { System.out.print("-"); }
         System.out.println("\nPlease enter a command: ");
     }
 }

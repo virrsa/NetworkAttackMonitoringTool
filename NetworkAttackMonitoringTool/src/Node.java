@@ -136,12 +136,13 @@ public class Node {
                 System.out.println("Node " + this.name + " has been permanently put offline.");
                 this.active = false;
                 StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); //timer
+                System.out.println("\nTimer has begun.");
                 timer.start();
                 for(String node : this.links.keySet()) {this.links.get(node).links.remove(this.name);}  // Remove all the cities connected to the current city
                 this.links.keySet().removeAll(this.getLinks().keySet());    // Remove all the cities the current city connects to
                 graph.printGraph(nodes, graph, true);
                 timer.stop();
-                System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
+                System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
             }
         }
     }

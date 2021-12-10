@@ -26,90 +26,72 @@
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.io.FileNotFoundException;
 
 public class main {
-    public static void main(String args[]) throws FileNotFoundException, IOException {
-        File attackInput;
-        Scanner attackScanner = null;
-        Scanner fileScanner = new Scanner(System.in);
+    public static void main(String args[]) throws FileNotFoundException {
+        File attackInput;                               // takes in the input of the attack file
+        Scanner attackScanner = null;                   // Scanner for the attack file
+        Scanner fileScanner = new Scanner(System.in);   // Scanner for the string the user enters
 
-        while (attackScanner == null) {
+        while (attackScanner == null) { // Loop until we have a valid file
             try {
                 System.out.println("Enter attack file name: ");
-                String fileName = fileScanner.nextLine().toUpperCase();
-                attackInput = new File(fileName);
-                attackScanner = new Scanner(attackInput);
-            } catch (Exception FileNotFoundException) {
+                String fileName = fileScanner.nextLine(); // Set whatever the user entered as the fileName
+                attackInput = new File(fileName);         // Get the attack file
+                attackScanner = new Scanner(attackInput);   // Set the scanner
+            } catch (Exception FileNotFoundException) { // If we fail to find the file
                 System.out.println("File not Found. Expected Directory: NetworkAttackMonitoringTool-->NetworkAttackMonitoringTool");
             }
         }
 
-        File graphInput = new File("Graph.txt");
-        Scanner graphScanner = new Scanner(graphInput);
+        File graphInput = new File("Graph.txt");    // takes in the input of the graph file
+        Scanner graphScanner = new Scanner(graphInput);     // Scanner for the graph file
 
-        //adds nodes to the hashmap given a Graph.txt file
-        Map<String,Node> nodes = new HashMap<>();
+        Map<String,Node> nodes = new HashMap<>();   //adds nodes to the hashmap given a Graph.txt file
 
-        while (graphScanner.hasNext()) {
-            String line = graphScanner.nextLine();
-            //breaks the loop when the connections/links portion begins
-            if(line.charAt(0) == '-')
-            {
-                break;
-            }
-            String[] parts = line.split(", ");
-            String nName = parts[0];
+        while (graphScanner.hasNext()) {                    // Loop until we've gone through the entire file
+            String line = graphScanner.nextLine();         // get the next line
+            if(line.charAt(0) == '-') { break; }          //breaks the loop when the connections/links portion begins
+            String[] parts = line.split(", ");     // split the line and store it into a string array
+            String nName = parts[0];                    // store the name into a string
             String nCoordinates = parts[1] + ", " + parts[2];
-            //check if the node has a firewall
-            if (parts.length == 4) {
-                nodes.put(nName, new Node(nName, nCoordinates, true));
-            }
-            else {
-                nodes.put(nName, new Node(nName, nCoordinates, false));
-            }
+            if (parts.length == 4) { nodes.put(nName, new Node(nName, nCoordinates, true)); }   // add a node with a firewall
+            else { nodes.put(nName, new Node(nName, nCoordinates, false)); }                    // add a node without a firewall
         }
 
-        //adds connections/links to nodes
-        while (graphScanner.hasNext()) {
-            String line = graphScanner.nextLine();
-            String[] parts = line.split(", ");
-            nodes.get(parts[0]).getLinks().put(nodes.get(parts[1]).getName(),nodes.get(parts[1]));
-            nodes.get(parts[1]).getLinks().put(nodes.get(parts[0]).getName(),nodes.get(parts[0]));
-        }
+        /* Adds connections/links to nodes */
+        while (graphScanner.hasNext()) {                // Loop until we've gone through the entire scanner
+            String line = graphScanner.nextLine();      // get the next line
+            String[] parts = line.split(", ");    // split the line and store it into a string array
+            nodes.get(parts[0]).getLinks().put(nodes.get(parts[1]).getName(),nodes.get(parts[1]));  // Store the link into its connecting node
+            nodes.get(parts[1]).getLinks().put(nodes.get(parts[0]).getName(),nodes.get(parts[0]));  // Bidirectional (goes both ways)
+        }                                                                                           // Ex. Tokyo <--> Miami
 
-        // Store each line of our attack.txt into a list
-        ArrayList<String> attackfile = new ArrayList<String>();
-        while(attackScanner.hasNext())
+        /* Store each line of our attack.txt into a list */
+        ArrayList<String> attackfile = new ArrayList<>(); // Create out attack list
+        while(attackScanner.hasNext()) { attackfile.add(attackScanner.nextLine()); }    // Loop through our attack file and add it to the list
+
+        /* Organize the attack dates into a list */
+        ArrayList<String> dateList = new ArrayList<String>();    // Create our dates list
+        for(String line : attackfile)  // Loop through each line of the file
         {
-            attackfile.add(attackScanner.nextLine());
-        }
-
-        // Organize the attack dates into a list
-        ArrayList<String> dateList = new ArrayList<String>();
-        for(String i : attackfile)
-        {
-            String[] parts = i.split(",");
+            String[] parts = line.split(",");   // split the line
             dateList.add(parts[2] + parts[3]); // parts[2] = yyyy-MM-dd ; parts[3] = HH:mm:ss
         }
 
-        // Sort the dates in order
+        /* Sort the dates in order */
         Collections.sort(dateList, new CompareDates());
 
-        // We will be deleting elements in the list but what to keep the original list
-        ArrayList<String> attackfileClone = new ArrayList<String>(attackfile.size());
-        for(String i : attackfile)
-        {
-            attackfileClone.add(i); // since we aren't changing the data of i we don't need to make a copy of i itself
-                                    // hence, the data of attackfileClone is at the same location of attackfile
-        }
+        /* We will delete elements in the list but want to keep the original list */
+        ArrayList<String> attackfileClone = new ArrayList<String>(attackfile.size());   // Create clone array
+        attackfileClone.addAll(attackfile); // Add all out data to the cloned array
 
-        Graph graph = new Graph();  // create a graph
-        graph.printGraph(nodes, graph, true); // Want to see the connections uncomment me then!
+        Graph graph = new Graph();  // Create a graph
+        graph.printGraph(nodes, graph, true); // Print the graph!
 
-        //injects attacks into nodes given an Attack.txt file.
+        /* Inject attacks into nodes given an Attack.txt file */
         for(String i : dateList)    // Loops through our data list
         {
             String jLineCopy = null;    // To avoid copying the same line twice we will remove them
@@ -119,36 +101,35 @@ public class main {
                 String[] parts = j.split(",");
                 if(i.compareTo(parts[2] + parts[3]) == 0)  // If the dates are the same then we can inject it!
                 {
-                    String node = parts[0];
-                    String type = parts[1];
-                    String date = parts[2];
-                    String time = parts[3];
+                    String node = parts[0]; // Store the node name
+                    String type = parts[1]; // Store the type of node (red,green,blue,black)
+                    String date = parts[2]; // Store the data
+                    String time = parts[3]; // Store the time
 
-                    Attack virus = new Attack(node, type, date, time);
-                    nodes.get(node).injectVirus(type, virus, graph, nodes);
+                    Attack virus = new Attack(node, type, date, time);  // Create our virus
+                    nodes.get(node).injectVirus(type, virus, graph, nodes); // Now inject it into the node
                     break;  // We don't need to keep looping through our attackFileClone
                 }
             }
-            attackfileClone.remove(jLineCopy);  // delete the line we found se we don't need it anymore
+            attackfileClone.remove(jLineCopy);  // delete the line we found since we don't need it anymore
         }
 
-        System.out.print("\n"); //output spacing purposes
+        System.out.print("\n"); // console spacing purposes
 
         Scanner input = new Scanner(System.in);
-        /* Calls a method to print out our welcome message and command list */
         BoxPrint.welcomeMsg();      // Prints welcome message
         while (true) {
             BoxPrint.commandList(); // Calls to create our nice view of all the commands
-            String userIn = input.nextLine().toUpperCase();
+            String userIn = input.nextLine().toUpperCase(); // Sets our input to uppercase
 
             if (userIn.equals("STAT")) {
                 while (true) {
-                    BoxPrint.stat();
-                    userIn = input.nextLine().toUpperCase();
+                    BoxPrint.stat();    // Prints our fancy prompt
+                    userIn = input.nextLine().toUpperCase();    // Sets our user input to uppercase
 
                     if (userIn.equals("INF")) {
                         int count = 0;
-                        //displays number of nodes that have been infected
+                        /* Displays number of nodes that have been infected */
                         for (Map.Entry<String, Node> node : nodes.entrySet())
                             if (node.getValue().getInfectedStatus()) {
                                 System.out.println("Node " + node.getKey() + " has been infected.");
@@ -158,7 +139,7 @@ public class main {
                     }
                     else if (userIn.equals("FIR")) {
                         int count = 0;
-                        //displays number of nodes that have a firewall
+                        /* Displays number of nodes that have a firewall */
                         for (Map.Entry<String, Node> node : nodes.entrySet())
                             if (node.getValue().getFirewallStatus()) {
                                 System.out.println("Node " + node.getKey() + " has a firewall.");
@@ -168,9 +149,9 @@ public class main {
                     }
                     else if (userIn.equals("FIA")) {
                         int count = 0;
-                        //displays nodes that have a firewall and have been attacked
+                        /* Displays nodes that have a firewall and have been attacked */
                         for (Map.Entry<String, Node> node : nodes.entrySet())
-                            if (node.getValue().getFirewallStatus() == true && node.getValue().getAttacks().size() > 0) {
+                            if (node.getValue().getFirewallStatus() && node.getValue().getAttacks().size() > 0) {
                                 System.out.println("Node " + node.getKey() + " has been attacked.");
                                 count++;
                             }
@@ -178,7 +159,7 @@ public class main {
                     }
                     else if (userIn.equals("OUT")) {
                         int count = 0;
-                        //displays nodes that have gotten an outbreak
+                        /* Displays nodes that have gotten an outbreak */
                         for (Map.Entry<String, Node> node : nodes.entrySet())
                             if (node.getValue().getOutbreakStatus()) {
                                 System.out.println("Node " + node.getKey() + " caused an outbreak.");
@@ -188,7 +169,7 @@ public class main {
                     }
                     else if (userIn.equals("INA")) {
                         int count = 0;
-                        //displays number of nodes that are inactive
+                        /* Displays number of nodes that are inactive */
                         for (Map.Entry<String, Node> node : nodes.entrySet())
                             if (!node.getValue().getActiveStatus()) {
                                 System.out.println("Node " + node.getKey() + " is inactive.");
@@ -201,21 +182,18 @@ public class main {
                     }
                 }
             }
-            //displays virus statistics given a node
+            /* Displays virus statistics given a node */
             else if (userIn.equals("VIRUS")) {
                 while(true) {
                     System.out.println("What node would you like get virus statistics on? (END to exit) ");
                     userIn = input.nextLine().toUpperCase();
 
-                    if (userIn.equals("END") || userIn.equals("EXIT")) {
-                        break;
-                    }
+                    if (userIn.equals("END") || userIn.equals("EXIT")) { break; }
 
-                    StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); //timer
-
+                    StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); // Timer
                     userIn = formatCity(userIn); // Fixes the format of our city name
 
-                    //check if the node that was entered was valid
+                    /* Check if the node that was entered was valid */
                     try {
                         timer.start();
                         if (nodes.get(userIn).getFirewallStatus()) {
@@ -229,16 +207,16 @@ public class main {
                         else {
                             System.out.println("Node " + userIn + " has generated " + nodes.get(userIn).getAlerts() + " alerts and is currently inactive.");
                         }
-                        timer.stop();
-                        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " microseconds");
+                        timer.stop();   // Stop timer
+                        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
                     }
-                    //if the input is a node that doesn't exist, catch the exception and ask the node once again
+                    /* If the input is a node that doesn't exist, catch the exception and ask the node once again */
                     catch(Exception e) {
-                        System.out.println("Please enter a valid node.");
+                        System.out.println("Please enter a valid node.\n");
                     }
                 }
             }
-            //creates safe routes
+            /* Creates safe routes */
             else if (userIn.equals("SAFE")) {
                 System.out.println("Which source node would you like to use for the safe route?");
                 String sourceInTemp = input.nextLine().toUpperCase();
@@ -246,11 +224,11 @@ public class main {
                 System.out.println("Which destination node would you like to use for the safe route?");
                 String destInTemp = input.nextLine().toUpperCase();
                 String destIn = formatCity(destInTemp); // Fixes the format of our city name
-                //check if the input is a valid node. If not, inform the user
+                /* Check if the input is a valid node. If not, inform the user */
                 try {
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
-                    //if one or both of the nodes are infected, the safe route cannot be generated
+                    /* If one or both of the nodes are infected, the safe route cannot be generated */
                     if (sNode.getInfectedStatus() || dNode.getInfectedStatus()) { System.out.println("Safe route cannot be generated. One or both nodes are currently infected.");}
                     else { graph.outputShortestDistance(nodes, sourceIn, destIn); }
                 }
@@ -259,7 +237,7 @@ public class main {
                     if(sourceIn.equals("Exit") || sourceIn.equals("End") || destIn.equals("Exit") || destIn.equals("End")) { continue; } else { System.out.println("Please enter a valid node."); }
                 }
             }
-            //exits out of the program
+            /* Exits out of the program */
             else if (userIn.equals("END") || userIn.equals("EXIT")) {
                 break;
             }
