@@ -94,3 +94,8 @@ randomly.
 VirusPrint.java: This class sorts the viruses based on how many attacks were attempted in
 each type, and prints the results from descending order, which is most attacks of a virus type
 to the least attacks of a virus type.
+
+StopWatchInMicroSeconds.java: This class is a class provided by a tutorial in NET3004, which 
+provides a timer for the code.
+
+BoxPrint.java: Formats outputs for the Network Attack Monitoring Tool.
