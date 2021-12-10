@@ -32,9 +32,22 @@ import java.io.FileNotFoundException;
 
 public class main {
     public static void main(String args[]) throws FileNotFoundException, IOException {
-        File attackInput = new File("Attack.txt");
+        File attackInput;
+        Scanner attackScanner = null;
+        Scanner fileScanner = new Scanner(System.in);
+
+        while (attackScanner == null) {
+            try {
+                System.out.println("Enter attack file name: ");
+                String fileName = fileScanner.nextLine().toUpperCase();
+                attackInput = new File(fileName);
+                attackScanner = new Scanner(attackInput);
+            } catch (Exception FileNotFoundException) {
+                System.out.println("File not Found. Expected Directory: NetworkAttackMonitoringTool-->NetworkAttackMonitoringTool");
+            }
+        }
+
         File graphInput = new File("Graph.txt");
-        Scanner attackScanner = new Scanner(attackInput);
         Scanner graphScanner = new Scanner(graphInput);
 
         //adds nodes to the hashmap given a Graph.txt file
@@ -122,14 +135,15 @@ public class main {
         System.out.print("\n"); //output spacing purposes
 
         Scanner input = new Scanner(System.in);
-        System.out.println("Welcome to the Network Attack Monitoring Tool.");
+        /* Calls a method to print out our welcome message and command list */
+        BoxPrint.welcomeMsg();      // Prints welcome message
         while (true) {
-            System.out.println("Would you like to view node statistics, virus statistics or create a safe route? STAT/VIRUS/SAFE/END (Statistics/Viruses/Safe Routes):");
+            BoxPrint.commandList(); // Calls to create our nice view of all the commands
             String userIn = input.nextLine().toUpperCase();
 
             if (userIn.equals("STAT")) {
                 while (true) {
-                    System.out.println("Enter INF/FIR/FIA/OUT/INA/END (Nodes Infected/Nodes with Firewall/Firewalls Attacked/Nodes with outbreaks/Inactive Nodes):");
+                    BoxPrint.stat();
                     userIn = input.nextLine().toUpperCase();
 
                     if (userIn.equals("INF")) {
@@ -234,7 +248,6 @@ public class main {
                 String destIn = formatCity(destInTemp); // Fixes the format of our city name
                 //check if the input is a valid node. If not, inform the user
                 try {
-
                     Node sNode = nodes.get(sourceIn);
                     Node dNode = nodes.get(destIn);
                     //if one or both of the nodes are infected, the safe route cannot be generated
@@ -242,7 +255,8 @@ public class main {
                     else { graph.outputShortestDistance(nodes, sourceIn, destIn); }
                 }
                 catch(Exception e) {
-                    System.out.println("Please enter a valid node.");
+                    /* Only tell the user about an invalid entry if they didn't want to leave */
+                    if(sourceIn.equals("Exit") || sourceIn.equals("End") || destIn.equals("Exit") || destIn.equals("End")) { continue; } else { System.out.println("Please enter a valid node."); }
                 }
             }
             //exits out of the program
