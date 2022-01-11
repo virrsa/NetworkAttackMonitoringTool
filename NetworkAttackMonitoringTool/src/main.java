@@ -1,8 +1,6 @@
 /**
  *  Sarah Virr
- *  101146506
  *  Jawad Kadri
- *  101147056
  *  Last modified: December 10th, 2021
  *
  *  This project creates and monitors the status of nodes in real time, given a file with the indicated nodes
@@ -190,12 +188,10 @@ public class main {
 
                     if (userIn.equals("END") || userIn.equals("EXIT")) { break; }
 
-                    StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); // Timer
                     userIn = formatCity(userIn); // Fixes the format of our city name
 
                     /* Check if the node that was entered was valid */
                     try {
-                        timer.start();
                         if (nodes.get(userIn).getFirewallStatus()) {
                             System.out.println("Node " + userIn + " has a firewall, thus has not been infected. Here are the records of the viruses that it blocked:");
                         }
@@ -207,9 +203,6 @@ public class main {
                         else {
                             System.out.println("Node " + userIn + " has generated " + nodes.get(userIn).getAlerts() + " alerts and is currently inactive.");
                         }
-                        timer.stop();   // Stop timer
-                        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
-                        timer.reset();
                     }
                     /* If the input is a node that doesn't exist, catch the exception and ask the node once again */
                     catch(Exception e) {

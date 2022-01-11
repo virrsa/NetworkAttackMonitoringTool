@@ -1,8 +1,6 @@
 /**
  *  Sarah Virr
- *  101146506
  *  Jawad Kadri
- *  101147056
  *  Last modified: December 10th, 2021
  *
  */
@@ -122,11 +120,9 @@ public class Graph {
 
         this.updateGraph(nodes, this);  // make sure our graph is up-to-date :)
 
-        StopWatchInMicroSeconds timer = new StopWatchInMicroSeconds(); // timer
         Map<String, Integer> nodesToNum = new HashMap<>();    // a hashmap that will store our city name and its corresponding number value
                                                               // Ex. < Vancouver, 0 >
         int number = 0; // value to be stored with corresponding city
-        timer.start();  // Stat timer
 
         for (String sourceNode : map.keySet()) {    // loop through the entire graph
             nodesToNum.put(sourceNode, number);     // put the city name + corresponding number into hashmap
@@ -171,9 +167,6 @@ public class Graph {
         findAllPaths(nodes, nodesToNum, numberAllGraph, numSource, numDest, vertices);
         if(!foundSafepath) {
             System.out.println("No safe path could not be found!\n");
-            timer.stop();
-            System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
-            timer.reset();
             return;
         }
 
@@ -201,11 +194,7 @@ public class Graph {
                     if (path.size() != index) System.out.print(" --> ");    // If we haven't printed the last edge then print the " --> " character
                     index++;                                                // increment our index
                 }
-
-        timer.stop();   // Stop the timer
         System.out.println("\n"); // Formatting
-        System.out.println("Elapsed Time: " + timer.getElapsedTime() + " Microseconds or " + (timer.getElapsedTime() / 1000) +" Milliseconds\n");
-        timer.reset();
     }
 
     public void findAllPaths(Map<String,Node> nodes, Map<String, Integer> nodesToNum, ArrayList<Integer>[] numberGraph, int numSource, int numDest, int numVertices)

@@ -1,8 +1,6 @@
 /**
  *  Sarah Virr
- *  101146506
  *  Jawad Kadri
- *  101147056
  *  Last modified: November 21st, 2021
  *
  */
